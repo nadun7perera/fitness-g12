@@ -4,7 +4,6 @@ const app = express()
 const HTTP_PORT = process.env.PORT || 8080
 
 const exphbs = require("express-handlebars");
-
 app.engine(".hbs", exphbs.engine({
     extname: ".hbs",
     helpers: {
@@ -14,7 +13,6 @@ app.engine(".hbs", exphbs.engine({
 app.set("view engine", ".hbs");
 
 app.use(express.static("assets"))
-
 app.use(express.urlencoded({ extended: true }))
 
 // setup sessions
@@ -29,6 +27,13 @@ const mongoose = require('mongoose')
 
 // connect to db
 mongoose.connect('mongodb://127.0.0.1:27017/fitnessStudioDB', { useNewUrlParser: true });
+
+//const roles
+const appRoles = {
+	admin: "admin",
+    user : "user"
+}
+
 
 // Define the schema for the collection
 const userSchema = new mongoose.Schema({
@@ -116,7 +121,7 @@ app.post("/login", async (req, res) => {
             if (user !== null) {
                 if (user.password === passwordFromUI) {
                     authentication = true
-                    userRole = user.role
+                    userRole = user.role.toLowerCase();
                 }
             }
         } catch (error) {
@@ -129,8 +134,9 @@ app.post("/login", async (req, res) => {
 
             console.log("[/login] What is the contents of req.session?")
             console.log(req.session)
+            console.log(req.session.currentUser);
 
-            res.render("classes", { layout: "skeleton" })
+            return userRole == appRoles.admin ? res.send("admin") : res.render("classes", { layout: "skeleton" })
         }
         else {
             return res.send("ERROR: Invalid credentials!")
@@ -186,4 +192,3 @@ const onHttpStart = () => {
 }
 
 app.listen(HTTP_PORT, onHttpStart)
-// createUser()
