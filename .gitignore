@@ -1,0 +1,5 @@
+#ignore course material folder
+Course Material/
+
+#ignore ds store file
+*.DS_Store
