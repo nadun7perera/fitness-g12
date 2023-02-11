@@ -101,6 +101,18 @@ app.get("/", (req, res) => {
     res.render("home", { layout: "skeleton" })
 })
 
+app.get("/classes", (req, res) => {
+    res.render("classes", { layout: "skeleton" })
+})
+
+app.get("/admin", (req, res) => {
+    res.render("admin", { layout: "skeleton" })
+})
+
+app.get("/cart", (req, res) => {
+    res.render("cart", { layout: "skeleton" })
+})
+
 app.get("/login", (req, res) => {
     res.render("login", { layout: "skeleton", isLogin: true })
 })
@@ -131,6 +143,7 @@ app.post("/login", async (req, res) => {
         //if userEmail and password matches, then create the session and log in the user
         if (authentication === true) {
             req.session.currentUser = userRole
+            req.session.isLoggedIn = true
 
             console.log("[/login] What is the contents of req.session?")
             console.log(req.session)
