@@ -1,0 +1,15 @@
+<div class="books">
+    <h2>{{{this.title}}}</h2>
+    <p>by: {{{this.author}}}</p>
+    {{!-- <p>{{{json this}}}</p> --}}
+    {{#if this.isUserCheck}}
+    <p id="userChecked">Checked out by you</p>
+    {{else}}
+    {{#if this.isBookAvailable}}
+    <input type="checkbox" name="bookStatusCheck" checked="true">
+    <button type="submit" name="borrowBtn" value="{{{this.id}}}">Borrow</button>
+    {{else}}
+    <p id="onLoan">On Loan</p>
+    {{/if}}
+    {{/if}}
+</div>
