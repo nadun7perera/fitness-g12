@@ -1,0 +1,64 @@
+/**************Global properties**********/
+* {
+    font-family: 'Oxygen', sans-serif;
+}
+
+body {
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* header */
+header,
+footer {
+    background-color: #f3722c;
+    padding: 5px;
+}
+
+header {
+    padding: 5px;
+}
+
+nav {
+    /* border: 1px solid black; */
+    overflow: hidden;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+header ul {
+    /* border: 1px solid purple; */
+    list-style: none;
+    overflow: hidden;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+ul li {
+    /* border: 1px solid black; */
+    float: left;
+    text-align: center;
+    padding: 15px;
+    padding-right: 25px;
+    width: 10%;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    font-family: 'Merriweather Sans', sans-serif;
+}
+
+/* footer */
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    color: white;
+    text-align: center;
+}
