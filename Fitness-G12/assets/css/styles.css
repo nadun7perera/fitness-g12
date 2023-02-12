@@ -1,64 +1,90 @@
 /**************Global properties**********/
 * {
-    font-family: 'Oxygen', sans-serif;
+  font-family: "Oxygen", sans-serif;
 }
 
 body {
-    margin: 0;
-    width: 100vw;
-    height: 100vh;
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
 }
 
 /* header */
 header,
 footer {
-    background-color: #f3722c;
-    padding: 5px;
+  background-color: #f3722c;
+  padding: 5px;
 }
 
 header {
-    padding: 5px;
+  padding: 5px;
 }
 
 nav {
-    /* border: 1px solid black; */
-    overflow: hidden;
-    width: 50%;
-    margin-left: auto;
-    margin-right: auto;
+  /* border: 1px solid black; */
+  overflow: hidden;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 header ul {
-    /* border: 1px solid purple; */
-    list-style: none;
-    overflow: hidden;
-    width: 80%;
-    margin-left: auto;
-    margin-right: auto;
+  /* border: 1px solid purple; */
+  list-style: none;
+  overflow: hidden;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 ul li {
-    /* border: 1px solid black; */
-    float: left;
-    text-align: center;
-    padding: 15px;
-    padding-right: 25px;
-    width: 10%;
+  /* border: 1px solid black; */
+  float: left;
+  text-align: center;
+  padding: 15px;
+  padding-right: 25px;
+  width: 10%;
 }
 
 header a {
-    color: white;
-    text-decoration: none;
-    font-size: 20px;
-    font-family: 'Merriweather Sans', sans-serif;
+  color: white;
+  text-decoration: none;
+  font-size: 20px;
+  font-family: "Merriweather Sans", sans-serif;
 }
 
 /* footer */
 footer {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    color: white;
-    text-align: center;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  color: white;
+  text-align: center;
+}
+
+#admin_table {
+  border-collapse: collapse;
+}
+
+#admin_table th,
+td {
+  border: 1px solid black;
+  text-align: center;
+}
+
+#admin_div {
+  justify-content: center;
+  align-content: center;
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
+}
+
+#filter_div {
+  flex-direction: row;
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  align-items: baseline;
 }

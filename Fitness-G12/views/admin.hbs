@@ -1,3 +1,37 @@
-<div>
-    
+<div id="admin_div">
+  <h1 style="text-align: center;">Purchases Record</h1>
+  <div id="filter_div">
+    <p>Total sale:${{totalPurchase}}</p>
+    <form action="/filterAdmin" method="POST">
+      <label>Sorting:</label>
+      <select name="filter" id="filter">
+        <option value=1>A-Z</option>
+      </select>
+      <button type="submit">Sort</button>
+    </form>
+  </div>
+  {{#if purchaseList}}
+    <table id="admin_table">
+      <thead>
+        <tr>
+          <th>Purchase ID</th>
+          <th>User email</th>
+          <th>Payment(in CAD)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each purchaseList}}
+          <tr>
+            <td>{{purchaseID}}</td>
+            <td>{{userEmail}}</td>
+            <td>{{payment}}</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+
+  {{else}}
+    <h4>No users found!</h4>
+  {{/if}}
+
 </div>
