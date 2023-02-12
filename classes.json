@@ -1,0 +1,28 @@
+[{
+  "_id": {
+    "$oid": "63e7f007ce18b31c2abffb74"
+  },
+  "classID": 1,
+  "className": "Box-Fit",
+  "instructor": "Adam",
+  "classLength": "45 min",
+  "price": 50
+},{
+  "_id": {
+    "$oid": "63e7f007ce18b31c2abffb75"
+  },
+  "classID": 2,
+  "className": "Upper Body Jacked",
+  "instructor": "James",
+  "classLength": "30 min",
+  "price": 20
+},{
+  "_id": {
+    "$oid": "63e7f007ce18b31c2abffb76"
+  },
+  "classID": 3,
+  "className": "Hatha Yoga",
+  "instructor": "Emily",
+  "classLength": "60 min",
+  "price": 30
+}]
