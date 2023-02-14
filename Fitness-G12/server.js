@@ -73,7 +73,7 @@ const cartSchema = new mongoose.Schema({
     userID: Number,
     userEmail: String,
     userName: String,
-    items: Array
+    items: Object
 });
 
 // Compile the schema into a model
@@ -88,39 +88,8 @@ let passwordFromUI = null;
 let userRole = null;
 var total = null;
 
-// // Create a new user document
-// async function createUser() {
-//     try {
-//         const user = await User.findOne({ role: 'Admin' });
-//         if (user === null) {
-//             const user = new User({
-//                 userID: 0001,
-//                 role: 'Admin',
-//                 userEmail: 'admin@fitness.com',
-//                 password: 'admin@789',
-//             });
-//             await user.save();
-//             console.log(`User created: ${user}`);
-//         }
-//     } catch (error) {
-//         console.error(error);
-//     }
-// }
-
 app.get("/", (req, res) => {
-    res.render("home", { layout: "skeleton" });
-});
-
-app.get("/classes", (req, res) => {
-    res.render("classes", { layout: "skeleton" });
-});
-
-app.get("/cart", (req, res) => {
-    res.render("cart", { layout: "skeleton" });
-});
-
-app.get("/login", (req, res) => {
-    res.render("login", { layout: "skeleton", isLogin: true });
+    res.render("home", { layout: "skeleton", isLoggedIn: isUserLoggedIn(req.session.isLoggedIn) });
 });
 
 app.post("/login", async (req, res) => {
@@ -149,15 +118,19 @@ app.post("/login", async (req, res) => {
         //if userEmail and password matches, then create the session and log in the user
         if (authentication === true) {
             req.session.currentUser = userRole;
+            req.session.userEmail = userEmailFromUI;
             req.session.isLoggedIn = true;
 
             console.log("[/login] What is the contents of req.session?");
             console.log(req.session);
             console.log(req.session.currentUser);
 
-            return userRole == appRoles.admin
-                ? requestAdmin()
-                : res.render("classes", { layout: "skeleton" });
+            //find all classes
+            const classes = await Class.find({}).lean();
+            res.render("classes", { layout: "skeleton", classList: classes, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn) });
+
+            // return userRole == appRoles.admin
+            //     ? requestAdmin(): res.render("classes", { layout: "skeleton" });
         } else {
             return res.send("ERROR: Invalid credentials!");
         }
@@ -196,48 +169,136 @@ app.post("/signup", async (req, res) => {
     });
 
     try {
-        await user.save();
-        await purchases.save();
+        //save to purchase collection only if the user sign up for monthly membership
+        if (payment === 0) {
+            await user.save();
+        } else {
+            await user.save();
+            await purchases.save();
+        }
+
+        req.session.currentUser = userRole;
+        req.session.userEmail = userEmailFromUI;
+        req.session.isLoggedIn = true;
+
         console.log(`User created: ${user}`);
         console.log(`Purchase created: ${purchases}`);
     } catch (error) {
         console.error(error);
     }
+    res.render("classes", { layout: "skeleton", isLoggedIn: isUserLoggedIn(req.session.isLoggedIn) });
+});
 
-    res.render("classes", { layout: "skeleton" });
+app.get("/classes", async (req, res) => {
+    try {
+        //find all classes
+        const classes = await Class.find({}).lean();
+        console.log("[/login] What is the contents of req.session?");
+        console.log(req.session.isLoggedIn);
+        res.render("classes", { layout: "skeleton", classList: classes, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn) });
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+app.get("/classes/:classId", async (req, res) => {
+    const cartID = Math.floor(Math.random() * 1000) + 1;
+    // const userID = Math.floor(Math.random() * 1000) + 1;
+    const listOfItems = []
+
+    //check if user is logged in
+    if (isUserLoggedIn(req.session.isLoggedIn)) {
+        try {
+            //find class
+            const currentClass = await Class.findOne({ classID: req.params.classId });
+            const currentUser = await User.findOne({ userEmail: req.session.userEmail });
+            listOfItems.push(currentClass)
+
+            const currentCart = new Cart({
+                orderID: cartID,
+                userID: currentUser.userID,
+                userEmail: req.session.userEmail,
+                // userName: currentUser.userName,
+                items: currentClass
+            });
+
+            await currentCart.save();
+
+            console.log("[/login] What is the contents of req.session?");
+            console.log(req.session.isLoggedIn);
+            //find all classes
+            const classes = await Class.find({}).lean();
+            res.render("classes", { layout: "skeleton", classList: classes, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn) });
+        } catch (error) {
+            console.error(error);
+        }
+    } else {
+        res.send("You need to be logged in to book classes.")
+    }
+});
+
+app.get("/cart", async (req, res) => {
+    let isUserMemeber = false
+    // const userEmailFromUI = req.body.userEmail
+    let cartList = []
+    if (isUserLoggedIn(req.session.isLoggedIn)) {
+        const currentUser = await User.findOne({ userEmail: req.session.userEmail });
+        isUserMemeber = currentUser.isMember
+    }
+
+    const carts = await Cart.find({ userEmail: req.session.userEmail });
+
+    for (currentCart of carts){
+        cartList.push(currentCart.items)
+    }
+
+    console.log("userEmailFromUI: " + userEmailFromUI)
+    // console.log(cartList)
+    console.log(cartList)
+    res.render("cart", { layout: "skeleton", userEmail: req.session.userEmail, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn), isMember: isUserMemeber, cartList: cartList });
+});
+
+app.get("/login", (req, res) => {
+    res.render("login", { layout: "skeleton", isLogin: true });
 });
 
 // const requestAdmin = () =>{
 app.get("/admin", async (req, res) => {
-    Purchase.find({})
-        .lean()
-        .then((purchaseItem) => {
-            //sum up all the values
-            const totalValues = Purchase.aggregate([
-                {
-                    $group: {
-                        _id: null,
-                        totalValue: { $sum: "$payment" },
+    //user authorization
+    if (req.session.currentUser === "admin") {
+        Purchase.find({})
+            .lean()
+            .then((purchaseItem) => {
+                //sum up all the values
+                const totalValues = Purchase.aggregate([
+                    {
+                        $group: {
+                            _id: null,
+                            totalValue: { $sum: "$payment" },
+                        },
                     },
-                },
-            ]);
+                ]);
 
-            //getting values from aggregate metod
-            totalValues
-                .exec()
-                .then((result) => {
-                    console.log("total", result[0].totalValue);
-                    total = result[0].totalValue;
-                    res.render("admin", {
-                        layout: "skeleton",
-                        purchaseList: purchaseItem,
-                        totalPurchase: result[0].totalValue,
+                //getting values from aggregate method
+                totalValues
+                    .exec()
+                    .then((result) => {
+                        console.log("total", result[0].totalValue);
+                        total = result[0].totalValue;
+                        res.render("admin", {
+                            layout: "skeleton",
+                            purchaseList: purchaseItem,
+                            totalPurchase: result[0].totalValue, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn)
+                        });
+                    })
+                    .catch((error) => {
+                        res.send("error occured while fetching values");
                     });
-                })
-                .catch((error) => {
-                    res.send("error occured while fetching values");
-                });
-        });
+            });
+    } else {
+        res.send("Only Admin has access to this page!")
+    }
+
 });
 
 app.post("/filterAdmin", async (req, res) => {
@@ -249,10 +310,24 @@ app.post("/filterAdmin", async (req, res) => {
             res.render("admin", {
                 layout: "skeleton",
                 purchaseList: result,
-                totalPurchase: total
+                totalPurchase: total, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn)
             });
         });
 });
+
+app.get("/logout", (req, res) => {
+    req.session.destroy();
+    res.render("home", { layout: "skeleton", isLoggedIn: false });
+})
+
+//function to check if the user is logged in
+const isUserLoggedIn = (isLogged) => {
+    if (isLogged) {
+        return true
+    } else {
+        return false
+    }
+}
 
 const onHttpStart = () => {
     console.log(

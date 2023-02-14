@@ -1,32 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-</head>
-
-<body>
+<main>
     {{#if this.isLogin}}
-    <form action="/login" method="POST">
-        <h1>LOGIN OR SIGNUP</h1>
-        <input type="text" name="userEmail" placeholder="Enter email address">
-        <input type="password" name="password" placeholder="Enter password">
-        <button name="loginBtn" value="Login">LOGIN</button>
-        <button name="createAccBtn" value="Create Account">CREATE ACCOUNT</button>
-    </form>
+    <div class="login-main">
+        <form action="/login" method="POST">
+            <p>LOGIN OR SIGNUP</p>
+            <input type="text" name="userEmail" placeholder="Enter email address">
+            <input type="password" name="password" placeholder="Enter password">
+            <div class="form-btn">
+                <button id="loginBtn" name="loginBtn" value="Login">LOGIN</button>
+                <button id="createAccBtn" name="createAccBtn" value="Create Account">CREATE ACCOUNT</button>
+            </div>
+        </form>
+    </div>
     {{else}}
-    <form action="/signup" method="POST">
-        <h1>CREATE AN ACCOUNT</h1>
-        <input type="checkbox" name="signUpCheck">
-        <label>signup to be a member ($75 per month)</label>
-        <button name="memberBtn" value="Yes">YES</button>
-        <button name="noMemberBtn" value="No">NO</button>
-    </form>
+    <div class="signup-main">
+        <form action="/signup" method="POST">
+            <div class="signup-content">
+                <p>CREATE AN ACCOUNT</p>
+                <input type="checkbox" name="signUpCheck">
+                <label>signup to be a member ($75 per month)</label>
+            </div>
+            <div class="form-btn">
+                <button id="memberBtn" name="memberBtn" value="Yes">YES</button>
+                <button id="noMemberBtn" name="noMemberBtn" value="No">NO</button>
+            </div>
+        </form>
+    </div>
     {{/if}}
-
-</body>
-
-</html>
+</main>

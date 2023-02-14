@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Classes</title>
-</head>
-<body> 
-    <h1>Classes</h1>
-</body>
-</html>
+<main class="class-main">
+<div class="class-description">
+    <h1> Our Classes</h1>
+    <p>We have designed specialised classes to meet your needs.</p>
+</div>
+{{#each classList}}
+{{> classes-partial this}}
+{{/each}}
+</main>
