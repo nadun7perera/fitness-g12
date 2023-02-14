@@ -1,32 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
+        <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-</head>
+        <head>
+            <meta charset="UTF-8" />
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>Login</title>
+        </head>
 
-<body>
-    {{#if this.isLogin}}
-    <form action="/login" method="POST">
-        <h1>LOGIN OR SIGNUP</h1>
-        <input type="text" name="userEmail" placeholder="Enter email address">
-        <input type="password" name="password" placeholder="Enter password">
-        <button name="loginBtn" value="Login">LOGIN</button>
-        <button name="createAccBtn" value="Create Account">CREATE ACCOUNT</button>
-    </form>
-    {{else}}
-    <form action="/signup" method="POST">
-        <h1>CREATE AN ACCOUNT</h1>
-        <input type="checkbox" name="signUpCheck">
-        <label>signup to be a member ($75 per month)</label>
-        <button name="memberBtn" value="Yes">YES</button>
-        <button name="noMemberBtn" value="No">NO</button>
-    </form>
-    {{/if}}
+        <body>
+            <div id="login-div">
+            {{#if this.isLogin}}
+                <h1>Login</h1>
+                <form action="/login" method="POST">
+                <input
+                    type="text"
+                    name="userEmail"
+                    placeholder="Enter email address"
+                />
+                <input type="password" name="password" placeholder="Enter password" />
+                <button name="loginBtn" value="Login">LOGIN</button>
+                <button name="createAccBtn" value="Create Account">CREATE ACCOUNT</button>
+                </form>
+            {{else}}
+                <h1>CREATE AN ACCOUNT</h1>
+                <form action="/signup" method="POST">
+                <input type="checkbox" name="signUpCheck" />
+                <label>signup to be a member ($75 per month)</label>
+                <button name="memberBtn" value="Yes">YES</button>
+                <button name="noMemberBtn" value="No">NO</button>
+                </form>
+            {{/if}}
+            </div>
 
-</body>
+        </body>
 
-</html>
+        </html>
