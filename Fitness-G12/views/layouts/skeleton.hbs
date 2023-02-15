@@ -31,19 +31,17 @@
                 <li><a href="/classes">Classes</a></li>
                 <li><a href="/admin">Admin</a></li>
                 <li><a href="/cart">Cart</a></li>
-                {{!-- {{#if this.isLogin}} --}}
+                {{#if this.isLoggedIn}}
+                <li><a href="/logout">Logout</a></li>
+                {{else}}
                 <li><a href="/login">Login</a></li>
-                {{!-- {{else}} --}}
-                {{!-- <li><a href="/logout">Logout</a></li> --}}
-                {{!-- {{/if}} --}}
+                {{/if}}
             </ul>
         </nav>
     </header>
-    <main>
-        {{{body}}}
-    </main>
+    {{{body}}}
     <footer>
-        <p>© 2023 Fitness-G12</p>
+        <p>&#169; 2023 Fit-Boxe Studio</p>
     </footer>
 </body>
 

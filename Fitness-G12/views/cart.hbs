@@ -1,0 +1,15 @@
+<main>
+    <form action="/cart" method="POST">
+        <p>CUSTOMER DETIALS</p>
+        <input type="text" name="userName" placeholder="Enter your name">
+        <input type="text" name="userEmail" placeholder="Enter your email" value="{{this.userEmail}}">
+        {{#if this.isMember}}
+        <p>VERIFIED MEMBER</p>
+        {{/if}}
+
+        <p>YOUR CLASSES</p>
+        {{#each cartList}}
+        {{> cart-partial this}}
+        {{/each}}
+    </form>
+</main>

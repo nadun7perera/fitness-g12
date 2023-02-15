@@ -1,218 +1,287 @@
-  /**************Global properties**********/
-  * {
-    font-family: "Oxygen", sans-serif;
-  }
+/**************Global properties**********/
+* {
+  font-family: "Oxygen", sans-serif;
+}
 
-  body {
-    margin: 0;
-    width: 100vw;
-    height: 100vh;
-  }
+body {
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+}
 
-  /* header */
-  header,
-  footer {
-    background-color: #f3722c89;
-    padding: 5px;
-  }
+/* header */
+header,
+footer {
+  background-color: #f3722c89;
+  padding: 5px;
+}
 
-  header {
-    padding: 5px;
-  }
+header {
+  padding: 5px;
+}
 
-  nav {
-    /* border: 1px solid black; */
-    overflow: hidden;
-    width: 50%;
-    margin-left: auto;
-    margin-right: auto;
-  }
+nav {
+  /* border: 1px solid black; */
+  overflow: hidden;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
 
-  header ul {
-    list-style: none;
-    overflow: hidden;
-    width: 80%;
-    margin-left: auto;
-    margin-right: auto;
-  }
+header ul {
+  list-style: none;
+  overflow: hidden;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
 
-  ul li {
-    border-radius: 30px;
-    float: left;
-    text-align: center;
-    padding: 15px;
-    margin: 5px;
-    width: 10%;
-  }
+ul li {
+  border-radius: 30px;
+  float: left;
+  text-align: center;
+  padding: 15px;
+  margin: 5px;
+  width: 10%;
+}
 
-  header a {
-    color: white;
-    text-decoration: none;
-    font-size: 20px;
-    font-family: "Merriweather Sans", sans-serif;
-  }
+header a {
+  color: white;
+  text-decoration: none;
+  font-size: 20px;
+  font-family: "Merriweather Sans", sans-serif;
+}
 
-  /* home page */
-  img {
-    width: 100vw;
-    height: 100vh;
-  }
+/* home page */
+img {
+  width: 100vw;
+  height: 100vh;
+}
 
-  .home-description {
-    padding: 30px;
-    position: absolute;
-    top: 55%;
-    margin-left: 48%;
-    width: 40%;
-    height: 150px;
-    text-align: center;
-    font-size: 15px;
-    color: #ffffff;
-    /* font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; */
-  }
+.home-description {
+  padding: 30px;
+  position: absolute;
+  top: 55%;
+  margin-left: 48%;
+  width: 40%;
+  height: 150px;
+  text-align: center;
+  font-size: 15px;
+  color: #ffffff;
+  /* font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; */
+}
 
-  .home-description h1 {
-    font-size: 50px;
-    margin-bottom: 0;
-  }
+.home-description h1 {
+  font-size: 50px;
+  margin-bottom: 0;
+}
 
-  .home-description p {
-    font-size: 22px;
-    font-weight: 400;
-    margin-top: 2px;
-    margin-bottom: 30px;
-  }
+.home-description p {
+  font-size: 22px;
+  font-weight: 400;
+  margin-top: 2px;
+  margin-bottom: 30px;
+}
 
-  .home-description a {
-    display: block;
-    width: 20%;
-    background-color: #f3722c;
-    border: none;
-    color: white;
-    padding: 12px;
-    text-align: center;
-    text-decoration: none;
-    border-radius: 25px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 10px;
-  }
+.home-description a {
+  display: block;
+  width: 20%;
+  background-color: #f3722c;
+  border: none;
+  color: white;
+  padding: 12px;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 25px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+}
 
-  /* home page */
-  img {
-    width: 100vw;
-    height: 100vh;
-  }
+/* home page */
+img {
+  width: 100vw;
+  height: 100vh;
+}
 
-  .home-description {
-    padding: 30px;
-    position: absolute;
-    top: 55%;
-    margin-left: 48%;
-    width: 40%;
-    height: 150px;
-    text-align: center;
-    font-size: 15px;
-    color: #ffffff;
-    /* font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; */
-  }
+.home-description {
+  padding: 30px;
+  position: absolute;
+  top: 55%;
+  margin-left: 48%;
+  width: 40%;
+  height: 150px;
+  text-align: center;
+  font-size: 15px;
+  color: #ffffff;
+  /* font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; */
+}
 
-  .home-description h1 {
-    font-size: 50px;
-    margin-bottom: 0;
-  }
+.home-description h1 {
+  font-size: 50px;
+  margin-bottom: 0;
+}
 
-  #login-div h1{
-    color: #ffffff;
-    font-size: 50px;
-    font-family: Arial Black;
-    text-align: center;
-  }
+#login-div h1 {
+  color: #ffffff;
+  font-size: 50px;
+  font-family: Arial Black;
+  text-align: center;
+}
 
-  .home-description p {
-    font-size: 22px;
-    font-weight: 400;
-    margin-top: 2px;
-    margin-bottom: 30px;
-  }
+.home-description p {
+  font-size: 22px;
+  font-weight: 400;
+  margin-top: 2px;
+  margin-bottom: 30px;
+}
 
-  .home-description a {
-    display: block;
-    width: 20%;
-    background-color: #f3722c;
-    border: none;
-    color: white;
-    padding: 12px;
-    text-align: center;
-    text-decoration: none;
-    border-radius: 25px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 10px;
-  }
+.home-description a {
+  display: block;
+  width: 20%;
+  background-color: #f3722c;
+  border: none;
+  color: white;
+  padding: 12px;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 25px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+}
 
-  /* footer */
-  footer {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    color: white;
-    text-align: center;
-  }
+/* footer */
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  color: white;
+  text-align: center;
+}
 
-  #admin_table {
-    border-collapse: collapse;
-  }
+#admin_table {
+  border-collapse: collapse;
+}
 
-  #admin_table th,
-  td {
-    border: 1px solid black;
-    text-align: center;
-  }
+#admin_table th,
+td {
+  border: 1px solid black;
+  text-align: center;
+}
 
-  #admin_div {
-    width: 70%;
-    height: 50%;
-    overflow: auto;
-    margin: auto;
-    position: absolute;
-    top: 0; left: 0; bottom: 0; right: 0;
-    background-color: white;
-    justify-content: center;
-    align-content: center;
-    display: flex;
-    flex-direction: column;
-    background-color: white;
-    padding: 20px;
-  }
+#admin_div {
+  width: 70%;
+  height: 50%;
+  overflow: auto;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: white;
+  justify-content: center;
+  align-content: center;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding: 20px;
+}
 
-  #filter_div {
-    flex-direction: row;
-    display: flex;
-    align-content: center;
-    justify-content: space-between;
-    align-items: baseline;
-  }
+#filter_div {
+  flex-direction: row;
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  align-items: baseline;
+}
 
-  #login-div{
+#login-div {
   width: 40%;
   overflow: auto;
   margin: auto;
   position: absolute;
-  top: 0; left: 0; bottom: 0; right: 0;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
   height: 50%;
-  }
+}
 
-  #login-div form{
-    display: grid;
+#login-div form {
+  display: grid;
+}
 
-  }
+#login-div form > input,
+button {
+  height: 20px;
+  border-radius: 15px;
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.704);
+}
 
-  #login-div form > input, button{
-    height: 20px;
-    border-radius: 15px;
-    margin-bottom: 10px;
-    padding: 10px;
-    background-color: rgba(255, 255, 255, 0.704);
-  }
+/* classes */
+.class-main {
+  background-color: black;
+  padding: 35px;
+  /* height: 100%; */
+}
+
+.classes {
+  background-color: white;
+  display: flex;
+  flex-direction: row;
+  margin-top: 2%;
+  margin-left: auto;
+  margin-right: auto;
+  width: 55%;
+}
+
+.classes img {
+  width: 15vw;
+  height: 20vh;
+  padding: 25px;
+}
+
+.class-details {
+  width: 50%;
+  padding: 2px;
+  height: 120px;
+  margin-top: 30px;
+  margin-left: 20px;
+}
+
+.classes h2 {
+  margin-top: 2px;
+}
+
+.classes a {
+  display: block;
+  width: 30%;
+  background-color: #f3722c;
+  border: none;
+  color: white;
+  padding: 8px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.class-description {
+  color: white;
+  text-align: center;
+}
+
+/* footer */
+footer {
+  padding: 15px;
+  position: relative;
+  overflow: hidden;
+  left: 0;
+  bottom: 0;
+  text-align: center;
+  color: white;
+  width: 100%;
+}
