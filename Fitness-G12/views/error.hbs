@@ -1,12 +1,13 @@
 <main>
-  <div id="login-div", style="background-color:black">
+  <div id="error-container">
     <h1 style="text-align: center; color: red">Error</h1>
     <p style="text-align: center; color: white">{{message}}</p>
-    <button id="goBack" style="background-color: #f3722c;height: 4em;">Go back</button>
+    <button id="error-button">Go back</button>
   </div>
 
   <script type="text/javascript">
-    document.getElementById("goBack").onclick = function () { 
-        console.log(window) };
+    document.getElementById("error-button").onclick = function () { 
+        window.history.back()
+    }
   </script>
 </main>

@@ -258,4 +258,17 @@ footer {
   justify-content: center;
   flex-direction: column;
   background-color: black;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+
+#error-button {
+  width: 300px;
+  margin-right: auto;
+  margin-left: auto;
+  display: block;
+  background-color: #f3722c;height: 30px;
+  border-radius: 15px ;
+  margin-top: 20px;
 }
