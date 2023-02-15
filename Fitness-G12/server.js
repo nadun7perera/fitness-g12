@@ -233,7 +233,7 @@ app.get("/classes/:classId", async (req, res) => {
             console.error(error);
         }
     } else {
-        res.send("You need to be logged in to book classes.")
+        renderError(res, "You need to be logged in to book classes.")
     }
 });
 
@@ -292,11 +292,11 @@ app.get("/admin", async (req, res) => {
                         });
                     })
                     .catch((error) => {
-                        res.send("error occured while fetching values");
+                      renderError(res, error);
                     });
             });
     } else {
-        res.send("Only Admin has access to this page!")
+        renderError(res, "Only Admin has access to this page!")
     }
 
 });
@@ -328,6 +328,11 @@ const isUserLoggedIn = (isLogged) => {
         return false
     }
 }
+
+const renderError = (res, message) => {
+  res.send(message);
+  // res.render("error", { layout: "skeleton", message: message });
+};
 
 const onHttpStart = () => {
     console.log(
