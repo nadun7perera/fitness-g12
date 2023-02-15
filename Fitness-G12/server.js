@@ -100,6 +100,14 @@ app.post("/login", async (req, res) => {
     userEmailFromUI = req.body.userEmail;
     passwordFromUI = req.body.password;
 
+    if (userEmailFromUI === ''){
+      renderError(res, "Please enter email")
+    }
+
+    if (passwordFromUI === ''){
+      renderError(res, "Password is required for login")
+    }
+
     //login btn
     if (loginBtn === "Login") {
         let authentication = false;
@@ -330,7 +338,7 @@ const isUserLoggedIn = (isLogged) => {
 }
 
 const renderError = (res, message) => {
-  res.send(message);
+  return res.send(message);
   // res.render("error", { layout: "skeleton", message: message });
 };
 
