@@ -6,7 +6,7 @@
 body {
   margin: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   background-image: url('../images/fitness-studio-home.jpg');
   background-repeat: no-repeat; 
   background-size: cover;
@@ -59,6 +59,7 @@ img {
   width: 100vw;
   height: 100vh;
 }
+
 
 .home-description {
   padding: 30px;
@@ -159,8 +160,7 @@ td {
   display: grid;
 }
 
-#login-div form>input,
-button {
+#login-div > form > input,button {
   height: 35px;
   margin-bottom: 10px;
   padding-left: 10px;
@@ -183,9 +183,9 @@ button {
 
 
 /* classes */
-.class-main {
-  background-color: black;
+main {
   padding: 35px;
+  height: 100vh;
 }
 
 .classes-container {
@@ -238,7 +238,8 @@ button {
 
 /* footer */
 footer {
-  position: fixed;
+  clear: both;
+  position: relative;
   left: 0;
   bottom: 0;
   width: 100%;
@@ -254,7 +255,6 @@ footer {
   background-color: black;
   height: 100%;
   width: 100%;
-  position: absolute;
   /* margin-top: 10px; */
 }
 

@@ -246,6 +246,7 @@ app.post("/classes/:classId", async (req, res) => {
     // const userID = Math.floor(Math.random() * 1000) + 1;
     const listOfItems = []
 
+    console.log("user logegd in ", req.session.isLoggedIn);
     //check if user is logged in
     if (isUserLoggedIn(req.session.isLoggedIn)) {
         try {
@@ -268,7 +269,7 @@ app.post("/classes/:classId", async (req, res) => {
             const classes = await Class.find({}).lean();
             res.render("classes", { layout: "skeleton", classList: classes, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn) });
         } catch (error) {
-            console.error(error);
+            console.error("error", error);
         }
     } else {
         console.error("Entered else");
@@ -362,7 +363,6 @@ app.get("/logout", (req, res) => {
 app.get("/error", (req, res) => {
     if (req.session.url === '') {
         res.redirect("/")
-
     } else {
         res.redirect(req.session.url)
     }
