@@ -19,8 +19,8 @@
             </form>
             <form id="payment-form" action="/pay" method="POST">
                 <label>Subtotal: ${{this.subTotal}}</label>
-                <label>Tax:$100</label>
-                <label>Total:$100</label>
+                <label>Tax:${{this.taxValue}}</label>
+                <label>Total:${{this.totalValue}}</label>
                 <button id="payBtn" type="submit">PAY</button>
             </form>
         </div>

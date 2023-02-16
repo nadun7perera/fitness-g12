@@ -340,6 +340,9 @@ app.post("/classes/:classId", async (req, res) => {
 });
 
 app.get("/cart", async (req, res) => {
+
+    let taxPercentage = 0.1; //i.e 10% (10/100 = 0.1)
+
   let isUserMemeber = false;
   if (isUserLoggedIn(req.session.isLoggedIn)) {
     const currentUser = await User.findOne({
@@ -377,7 +380,7 @@ app.get("/cart", async (req, res) => {
         .exec()
         .then((result) => {
           console.log("total", result);
-
+          const taxValue = result[0].total * taxPercentage
           res.render("cart", {
             layout: "skeleton",
             userEmail: req.session.userEmail,
@@ -385,6 +388,8 @@ app.get("/cart", async (req, res) => {
             isMember: isUserMemeber,
             cartList: cartItem,
             subTotal: result[0].total,
+            taxValue: taxValue,
+            totalValue: result[0].total+taxValue
           });
         })
         .catch((error) => {
