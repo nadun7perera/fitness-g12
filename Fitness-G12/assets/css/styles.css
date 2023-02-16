@@ -7,6 +7,9 @@ body {
   margin: 0;
   width: 100vw;
   height: 100vh;
+  background-image: url('../images/fitness-studio-home.jpg');
+  background-repeat: no-repeat; 
+  background-size: cover;
 }
 
 /* header */
@@ -21,7 +24,6 @@ header {
 }
 
 nav {
-  /* border: 1px solid black; */
   overflow: hidden;
   width: 50%;
   margin-left: auto;
@@ -98,41 +100,7 @@ img {
   margin-top: 10px;
 }
 
-/* home page */
-img {
-  width: 100vw;
-  height: 100vh;
-}
-
-#login-div h1 {
-  color: #ffffff;
-  font-size: 50px;
-  font-family: Arial Black;
-  text-align: center;
-}
-
-.home-description p {
-  font-size: 22px;
-  font-weight: 400;
-  margin-top: 2px;
-  margin-bottom: 30px;
-}
-
-.home-description a {
-  display: block;
-  width: 20%;
-  background-color: #f3722c;
-  border: none;
-  color: white;
-  padding: 12px;
-  text-align: center;
-  text-decoration: none;
-  border-radius: 25px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 10px;
-}
-
+/* admin page */
 #admin_table {
   border-collapse: collapse;
 }
@@ -143,7 +111,7 @@ td {
   text-align: center;
 }
 
-#admin_div {
+#admin_div, #cart-container {
   width: 70%;
   height: 50%;
   overflow: auto;
@@ -170,34 +138,58 @@ td {
   align-items: baseline;
 }
 
+/* login page */
 #login-div {
   width: 40%;
   overflow: auto;
   margin: auto;
   position: absolute;
-  top: 0;
+  top: 30%;
   left: 0;
   bottom: 0;
   right: 0;
   height: 70%;
 }
 
+#login-div h1 {
+  color: white;
+}
+
 #login-div form {
   display: grid;
 }
 
-#login-div form > input,
+#login-div form>input,
 button {
   height: 35px;
   margin-bottom: 10px;
+  padding-left: 10px;
   background-color: rgba(255, 255, 255, 1);
 }
+
+#login-div button{
+  background-color: #f3722c;
+  color: white;
+  padding-left: 0px;
+}
+
+#signUpCheck {
+  margin-bottom: 20px;
+}
+
+#signUpCheck-container label {
+  color: white;
+}
+
 
 /* classes */
 .class-main {
   background-color: black;
   padding: 35px;
-  /* height: 100%; */
+}
+
+.classes-container {
+  margin-bottom: 50px;
 }
 
 .classes {
@@ -244,6 +236,7 @@ button {
   text-align: center;
 }
 
+/* footer */
 footer {
   position: fixed;
   left: 0;
@@ -253,6 +246,7 @@ footer {
   text-align: center;
 }
 
+/* error page */
 #error-container {
   display: flex;
   justify-content: center;
@@ -261,6 +255,17 @@ footer {
   height: 100%;
   width: 100%;
   position: absolute;
+  /* margin-top: 10px; */
+}
+
+#error-container h1 {
+  text-align: center; 
+  color: red
+}
+
+#error-container p {
+  text-align: center; 
+  color: white
 }
 
 #error-button {
@@ -268,7 +273,8 @@ footer {
   margin-right: auto;
   margin-left: auto;
   display: block;
-  background-color: #f3722c;height: 30px;
-  border-radius: 15px ;
+  background-color: #f3722c;
+  height: 30px;
+  border-radius: 15px;
   margin-top: 20px;
 }

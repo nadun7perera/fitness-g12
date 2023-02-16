@@ -89,10 +89,12 @@ let userRole = null;
 var total = null;
 
 app.get("/", (req, res) => {
+    req.session.url = "/"
     res.render("home", { layout: "skeleton", isLoggedIn: isUserLoggedIn(req.session.isLoggedIn) });
 });
 
 app.post("/login", async (req, res) => {
+    req.session.url = "/login"
     const loginBtn = req.body.loginBtn;
     const createAccBtn = req.body.createAccBtn;
 
@@ -100,20 +102,28 @@ app.post("/login", async (req, res) => {
     userEmailFromUI = req.body.userEmail;
     passwordFromUI = req.body.password;
 
-    if (userEmailFromUI === ''){
-      renderError(res, "Please enter email")
-      return
-    }
-
-    if (passwordFromUI === ''){
-      renderError(res, "Password is required for login")
-      return
-    }
-
     //login btn
     if (loginBtn === "Login") {
         let authentication = false;
+
+        //login validation
+        if (userEmailFromUI === '' && passwordFromUI === '') {
+            renderError(res, "Email and Password are required")
+            return
+        }
+
+        if (userEmailFromUI === '') {
+            renderError(res, "Email is required")
+            return
+        }
+
+        if (passwordFromUI === '') {
+            renderError(res, "Password is required")
+            return
+        }
+
         try {
+            console.log("Entered")
             const user = await User.findOne({ userEmail: userEmailFromUI });
             if (user !== null) {
                 if (user.password === passwordFromUI) {
@@ -142,10 +152,10 @@ app.post("/login", async (req, res) => {
             // return userRole == appRoles.admin
             //     ? requestAdmin(): res.render("classes", { layout: "skeleton" });
         } else {
-            return res.send("ERROR: Invalid credentials!");
+            renderError(res, "Invalid credentials Entered")
         }
         //Create Account btn
-    } else if (createAccBtn === "Create Account") {
+    } else if (createAccBtn === "CreateAccount") {
         res.render("login", { layout: "skeleton", isLogin: false });
     }
 });
@@ -157,6 +167,22 @@ app.post("/signup", async (req, res) => {
     const userID = Math.floor(Math.random() * 1000) + 1;
     const purchaseID = Math.floor(Math.random() * 1000) + 1;
     // const noMemberBtn = req.body.noMemberBtn
+
+    //login validation
+    if (userEmailFromUI === '' && passwordFromUI === '') {
+        renderError(res, "Email and Password are required")
+        return
+    }
+
+    if (userEmailFromUI === '') {
+        renderError(res, "Email is required")
+        return
+    }
+
+    if (passwordFromUI === '') {
+        renderError(res, "Password is required")
+        return
+    }
 
     if (memberBtn === "Yes") {
         isMember = true;
@@ -193,13 +219,17 @@ app.post("/signup", async (req, res) => {
 
         console.log(`User created: ${user}`);
         console.log(`Purchase created: ${purchases}`);
+        //find all classes
+        const classes = await Class.find({}).lean();
+
+        res.render("classes", { layout: "skeleton", classList: classes, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn) });
     } catch (error) {
         console.error(error);
     }
-    res.render("classes", { layout: "skeleton", isLoggedIn: isUserLoggedIn(req.session.isLoggedIn) });
 });
 
 app.get("/classes", async (req, res) => {
+    req.session.url = "/classes"
     try {
         //find all classes
         const classes = await Class.find({}).lean();
@@ -211,7 +241,7 @@ app.get("/classes", async (req, res) => {
     }
 });
 
-app.get("/classes/:classId", async (req, res) => {
+app.post("/classes/:classId", async (req, res) => {
     const cartID = Math.floor(Math.random() * 1000) + 1;
     // const userID = Math.floor(Math.random() * 1000) + 1;
     const listOfItems = []
@@ -234,8 +264,6 @@ app.get("/classes/:classId", async (req, res) => {
 
             await currentCart.save();
 
-            console.log("[/login] What is the contents of req.session?");
-            console.log(req.session.isLoggedIn);
             //find all classes
             const classes = await Class.find({}).lean();
             res.render("classes", { layout: "skeleton", classList: classes, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn) });
@@ -243,6 +271,7 @@ app.get("/classes/:classId", async (req, res) => {
             console.error(error);
         }
     } else {
+        console.error("Entered else");
         renderError(res, "You need to be logged in to book classes.")
     }
 });
@@ -258,7 +287,7 @@ app.get("/cart", async (req, res) => {
 
     const carts = await Cart.find({ userEmail: req.session.userEmail });
 
-    for (currentCart of carts){
+    for (currentCart of carts) {
         cartList.push(currentCart.items)
     }
 
@@ -302,7 +331,7 @@ app.get("/admin", async (req, res) => {
                         });
                     })
                     .catch((error) => {
-                      renderError(res, error);
+                        renderError(res, error);
                     });
             });
     } else {
@@ -330,6 +359,15 @@ app.get("/logout", (req, res) => {
     res.render("home", { layout: "skeleton", isLoggedIn: false });
 })
 
+app.get("/error", (req, res) => {
+    if (req.session.url === '') {
+        res.redirect("/")
+
+    } else {
+        res.redirect(req.session.url)
+    }
+})
+
 //function to check if the user is logged in
 const isUserLoggedIn = (isLogged) => {
     if (isLogged) {
@@ -339,8 +377,9 @@ const isUserLoggedIn = (isLogged) => {
     }
 }
 
+//function to create error message UI
 const renderError = (res, message) => {
-  return res.render("error", { layout: "skeleton", message: message});
+    return res.render("error", { layout: "skeleton", message: message });
 };
 
 const onHttpStart = () => {

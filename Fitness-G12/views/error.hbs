@@ -1,13 +1,16 @@
 <main>
   <div id="error-container">
-    <h1 style="text-align: center; color: red">Error</h1>
-    <p style="text-align: center; color: white">{{message}}</p>
-    <button id="error-button">Go back</button>
+    <h1>Error</h1>
+    <p>{{message}}</p>
+    <form action="/error" method="GET">
+      <button id="error-button">Go back</button>
+    </form>
   </div>
 
+  {{!--
   <script type="text/javascript">
-    document.getElementById("error-button").onclick = function () { 
-        window.history.back()
+    document.getElementById("error-button").onclick = function () {
+      window.history.back()
     }
-  </script>
+  </script> --}}
 </main>
