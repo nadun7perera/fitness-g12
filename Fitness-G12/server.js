@@ -317,14 +317,14 @@ app.post("/classes/:classId", async (req, res) => {
       });
 
       await currentCart.save();
-
+      res.redirect("/cart")
       //find all classes
-      const classes = await Class.find({}).lean();
-      res.render("classes", {
-        layout: "skeleton",
-        classList: classes,
-        isLoggedIn: isUserLoggedIn(req.session.isLoggedIn),
-      });
+    //   const classes = await Class.find({}).lean();
+    //   res.render("classes", {
+    //     layout: "skeleton",
+    //     classList: classes,
+    //     isLoggedIn: isUserLoggedIn(req.session.isLoggedIn),
+    //   });
     } catch (error) {
       console.error("error", error);
     }
