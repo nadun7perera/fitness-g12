@@ -2,15 +2,14 @@
   <div id="error-container">
     <h1>Error</h1>
     <p>{{message}}</p>
+    {{#if this.isGoBackBtn}}
     <form action="/error" method="GET">
-      <button id="error-button">Go back</button>
+      <button id="error-button">Go Back</button>
     </form>
+    {{else}}
+    <form action="/classes" method="GET">
+      <button id="error-button">View Classes</button>
+    </form>
+    {{/if}}
   </div>
-
-  {{!--
-  <script type="text/javascript">
-    document.getElementById("error-button").onclick = function () {
-      window.history.back()
-    }
-  </script> --}}
 </main>

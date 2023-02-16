@@ -1,19 +1,30 @@
 <main>
     <div id="cart-container">
-    <form action="/cart" method="POST">
-        <h2 class="cart-h2">CUSTOMER DETIALS</h2>
-        <div id="cart-form-div">
-            <input type="text" name="userName" placeholder="Enter your name">
-        <input type="text" name="userEmail" placeholder="Enter your email" value="{{this.userEmail}}">
-        </div>
-        {{#if this.isMember}}
-        <div id="star-div"><img src="images/star.png" style="height:35px; width:35px"/><p class="cart-p">VERIFIED MEMBER</p></div>
-        {{/if}}
-
-        <h2 class="cart-h2">YOUR CLASSES</h2>
-        {{#each cartList}}
-        {{> cart-partial this}}
-        {{/each}}
-    </form>
+        <form action="/cart" method="POST">
+            <h2 class="cart-h2">CUSTOMER DETIALS</h2>
+            <div id="cart-form-div">
+                <input type="text" name="userName" placeholder="Enter your name">
+                <input type="text" name="userEmail" placeholder="Enter your email" value="{{this.userEmail}}">
+            </div>
+            {{#if this.isMember}}
+            <div id="star-div">
+                <img src="images/star.png" />
+                <p class="cart-p">VERIFIED MEMBER</p>
+            </div>
+            {{/if}}
+            <h2 class="cart-h2">YOUR CLASSES</h2>
+            {{#each cartList}}
+            {{> cart-partial this}}
+            {{/each}}
+        </form>
+        <form action="/pay" method="POST">
+            <label>Subtotal: $</label>
+            <p>100</p>
+            <label>Tax: $</label>
+            <p>100</p>
+            <label>Total: $</label>
+            <p>100</p>
+            <button id="payBtn" type="submit">PAY</button>
+        </form>
     </div>
 </main>

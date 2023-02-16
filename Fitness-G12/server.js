@@ -72,7 +72,7 @@ const cartSchema = new mongoose.Schema({
     orderID: Number,
     userID: Number,
     userEmail: String,
-    userName: String,
+    // userName: String,
     items: Object
 });
 
@@ -86,7 +86,8 @@ const Cart = mongoose.model("Cart", cartSchema);
 let userEmailFromUI = null;
 let passwordFromUI = null;
 let userRole = null;
-var total = null;
+let total = null;
+let cartTotal = null;
 
 app.get("/", (req, res) => {
     req.session.url = "/"
@@ -94,6 +95,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
+    let user = null
     req.session.url = "/login"
     const loginBtn = req.body.loginBtn;
     const createAccBtn = req.body.createAccBtn;
@@ -108,23 +110,23 @@ app.post("/login", async (req, res) => {
 
         //login validation
         if (userEmailFromUI === '' && passwordFromUI === '') {
-            renderError(res, "Email and Password are required")
+            renderError(res, "Email and Password are required", true, isUserLoggedIn(req.session.isLoggedIn))
             return
         }
 
         if (userEmailFromUI === '') {
-            renderError(res, "Email is required")
+            renderError(res, "Email is required", true, isUserLoggedIn(req.session.isLoggedIn))
             return
         }
 
         if (passwordFromUI === '') {
-            renderError(res, "Password is required")
+            renderError(res, "Password is required", true, isUserLoggedIn(req.session.isLoggedIn))
             return
         }
 
         try {
             console.log("Entered")
-            const user = await User.findOne({ userEmail: userEmailFromUI });
+            user = await User.findOne({ userEmail: userEmailFromUI });
             if (user !== null) {
                 if (user.password === passwordFromUI) {
                     authentication = true;
@@ -139,6 +141,7 @@ app.post("/login", async (req, res) => {
         if (authentication === true) {
             req.session.currentUser = userRole;
             req.session.userEmail = userEmailFromUI;
+            req.session.userId = user.userID;
             req.session.isLoggedIn = true;
 
             console.log("[/login] What is the contents of req.session?");
@@ -152,7 +155,7 @@ app.post("/login", async (req, res) => {
             // return userRole == appRoles.admin
             //     ? requestAdmin(): res.render("classes", { layout: "skeleton" });
         } else {
-            renderError(res, "Invalid credentials Entered")
+            renderError(res, "Invalid credentials Entered", true, isUserLoggedIn(req.session.isLoggedIn))
         }
         //Create Account btn
     } else if (createAccBtn === "CreateAccount") {
@@ -170,17 +173,17 @@ app.post("/signup", async (req, res) => {
 
     //login validation
     if (userEmailFromUI === '' && passwordFromUI === '') {
-        renderError(res, "Email and Password are required")
+        renderError(res, "Email and Password are required", true, isUserLoggedIn(req.session.isLoggedIn))
         return
     }
 
     if (userEmailFromUI === '') {
-        renderError(res, "Email is required")
+        renderError(res, "Email is required", true, isUserLoggedIn(req.session.isLoggedIn))
         return
     }
 
     if (passwordFromUI === '') {
-        renderError(res, "Password is required")
+        renderError(res, "Password is required", true, isUserLoggedIn(req.session.isLoggedIn))
         return
     }
 
@@ -215,6 +218,7 @@ app.post("/signup", async (req, res) => {
 
         req.session.currentUser = userRole;
         req.session.userEmail = userEmailFromUI;
+        req.session.userId = userID;
         req.session.isLoggedIn = true;
 
         console.log(`User created: ${user}`);
@@ -234,7 +238,7 @@ app.get("/classes", async (req, res) => {
         //find all classes
         const classes = await Class.find({}).lean();
         console.log("[/login] What is the contents of req.session?");
-        console.log(req.session.isLoggedIn);
+        console.log(req.session);
         res.render("classes", { layout: "skeleton", classList: classes, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn) });
     } catch (error) {
         console.error(error);
@@ -272,59 +276,93 @@ app.post("/classes/:classId", async (req, res) => {
             console.error("error", error);
         }
     } else {
-        console.error("Entered else");
-        renderError(res, "You need to be logged in to book classes.")
+        renderError(res, "You need to be logged in to book classes.", true, isUserLoggedIn(req.session.isLoggedIn))
     }
 });
 
 app.get("/cart", async (req, res) => {
     let isUserMemeber = false
-    // const userEmailFromUI = req.body.userEmail
-    let cartList = []
+
     if (isUserLoggedIn(req.session.isLoggedIn)) {
         const currentUser = await User.findOne({ userEmail: req.session.userEmail });
         isUserMemeber = currentUser.isMember
     }
 
-    const carts = await Cart.find({ userEmail: req.session.userEmail }).lean().exec().then((result) => {
+    const carts = await Cart.find({ userEmail: req.session.userEmail }).lean()
 
-        // sum all the values to show total
-        // const totalValues = Cart.aggregate([
-        //     {
-        //         $group: {
-        //             _id: null,
-        //             totalValue: { $sum: "$payment" },
-        //         },
-        //     },
-        // ]);
+    //display error message if no items in cart
+    if (carts.length === 0) {
+        renderError(res, "Sorry, you do not have any items in the cart.", false, isUserLoggedIn(req.session.isLoggedIn))
+        return
+    }
 
-        // //getting values from aggregate method
-        // totalValues
-        //     .exec()
-        //     .then((result) => {
-        //         console.log("total", result[0].totalValue);
-        //         total = result[0].totalValue;
-        //         res.render("admin", {
-        //             layout: "skeleton",
-        //             purchaseList: purchaseItem,
-        //             totalPurchase: result[0].totalValue, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn)
-        //         });
-        //     })
-        //     .catch((error) => {
-        //         renderError(res, error);
-        //     });
+    // const carts = await Cart.find({ userEmail: req.session.userEmail }).exec().lean().then((result) => {
 
-        res.render("cart", { layout: "skeleton", userEmail: req.session.userEmail, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn), isMember: isUserMemeber, cartList: result });
-    });;
+    // sum all the values to show total
+    // const totalValues = Cart.aggregate([
+    //     {
+    //         $group: {
+    //             _id: null,
+    //             totalValue: { $sum: "$payment" },
+    //         },
+    //     },
+    // ]);
 
+    // //getting values from aggregate method
+    // totalValues
+    //     .exec()
+    //     .then((result) => {
+    //         console.log("total", result[0].totalValue);
+    //         total = result[0].totalValue;
+    //         res.render("admin", {
+    //             layout: "skeleton",
+    //             purchaseList: purchaseItem,
+    //             totalPurchase: result[0].totalValue, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn)
+    //         });
+    //     })
+    //     .catch((error) => {
+    //         renderError(res, error);
+    //     });
 
-    console.log("userEmailFromUI: " + userEmailFromUI)
-    // console.log(cartList)
-    
+    //     res.render("cart", { layout: "skeleton", userEmail: req.session.userEmail, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn), isMember: isUserMemeber, cartList: result });
+    // });;
+
+    res.render("cart", { layout: "skeleton", userEmail: req.session.userEmail, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn), isMember: isUserMemeber, cartList: carts });
 });
 
+app.post("/pay", async (req, res) => {
+    console.log("PAY button pressed")
+    const purchaseID = Math.floor(Math.random() * 1000) + 1;
+    const orderID = (`ORD-${Math.floor(Math.random() * 10000) + 1}`);
+
+    if (isUserLoggedIn(req.session.isLoggedIn)) {
+        const currentUser = await User.findOne({ userEmail: req.session.userEmail });
+        isUserMemeber = currentUser.isMember
+    }
+
+    const purchases = new Purchase({
+        purchaseID: purchaseID,
+        userID: req.session.userId,
+        userEmail: req.session.userEmail,
+        payment: req.session.cartTotal
+        // payment: 250
+    });
+
+    try {
+        //save the cart total and user details to purchase collection
+        await purchases.save();
+
+        //remove all cart documents that matches the userEmail
+        await Cart.remove({ userEmail: req.session.userEmail });
+
+        res.render("confirmation", { layout: "skeleton", isLoggedIn: isUserLoggedIn(req.session.isLoggedIn), orderId: orderID });
+    } catch (error) {
+        console.error(error);
+    }
+})
+
 app.get("/login", (req, res) => {
-    res.render("login", { layout: "skeleton", isLogin: true });
+    res.render("login", { layout: "skeleton", isLogin: true, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn) });
 });
 
 // const requestAdmin = () =>{
@@ -357,11 +395,11 @@ app.get("/admin", async (req, res) => {
                         });
                     })
                     .catch((error) => {
-                        renderError(res, error);
+                        renderError(res, error, true, isUserLoggedIn(req.session.isLoggedIn));
                     });
             });
     } else {
-        renderError(res, "Only Admin has access to this page!")
+        renderError(res, "Only Admin has access to this page!", true, isUserLoggedIn(req.session.isLoggedIn))
     }
 
 });
@@ -393,6 +431,11 @@ app.get("/error", (req, res) => {
     }
 })
 
+//function to create error message UI
+const renderError = (res, message, isGoBackBtn, isLoggedIn) => {
+    return res.render("error", { layout: "skeleton", message: message, isGoBackBtn: isGoBackBtn, isLoggedIn: isLoggedIn });
+};
+
 //function to check if the user is logged in
 const isUserLoggedIn = (isLogged) => {
     if (isLogged) {
@@ -401,11 +444,6 @@ const isUserLoggedIn = (isLogged) => {
         return false
     }
 }
-
-//function to create error message UI
-const renderError = (res, message) => {
-    return res.render("error", { layout: "skeleton", message: message });
-};
 
 const onHttpStart = () => {
     console.log(
