@@ -321,12 +321,12 @@ app.post("/classes/:classId", async (req, res) => {
       await currentCart.save();
       res.redirect("/cart")
       //find all classes
-    //   const classes = await Class.find({}).lean();
-    //   res.render("classes", {
-    //     layout: "skeleton",
-    //     classList: classes,
-    //     isLoggedIn: isUserLoggedIn(req.session.isLoggedIn),
-    //   });
+      //   const classes = await Class.find({}).lean();
+      //   res.render("classes", {
+      //     layout: "skeleton",
+      //     classList: classes,
+      //     isLoggedIn: isUserLoggedIn(req.session.isLoggedIn),
+      //   });
     } catch (error) {
       console.error("error", error);
     }
@@ -342,6 +342,9 @@ app.post("/classes/:classId", async (req, res) => {
 
 app.get("/cart", async (req, res) => {
   let taxPercentage = 0.1; //i.e 10% (10/100 = 0.1)
+  let subTotal = 0;
+  let totalValue = 0;
+  let taxValue = 0;
 
   let isUserMemeber = false;
   if (isUserLoggedIn(req.session.isLoggedIn)) {
@@ -351,7 +354,6 @@ app.get("/cart", async (req, res) => {
     isUserMemeber = currentUser.isMember;
   }
 
-  // const carts = await Cart.find({ userEmail: req.session.userEmail }).lean()
   await Cart.find({ userEmail: req.session.userEmail })
     .lean()
     .exec()
@@ -370,7 +372,7 @@ app.get("/cart", async (req, res) => {
       // sum all the values to show total
       const totalValues = Cart.aggregate([
         { $match: { userEmail: req.session.userEmail } },
-        { $group: { _id: null, total: { $sum: "$items.price" } } },
+        { $group: { _id: null, total: { $sum: "$itemPrice" } } },
       ]);
 
       console.log("total", totalValues);
@@ -379,21 +381,29 @@ app.get("/cart", async (req, res) => {
       totalValues
         .exec()
         .then((result) => {
-          console.log("total", result);
-          const taxValue = result[0].total * taxPercentage;
+          //do calculation only if the user is not a member
+          if (isUserMemeber === false) {
+            subTotal = result[0].total;
+            taxValue = result[0].total * taxPercentage
+            totalValue = result[0].total + taxValue
+          }
+
+          //save cart total in session to use be used later during payment
+          req.session.cartTotal = totalValue;
+
           res.render("cart", {
             layout: "skeleton",
             userEmail: req.session.userEmail,
             isLoggedIn: isUserLoggedIn(req.session.isLoggedIn),
             isMember: isUserMemeber,
             cartList: cartItem,
-            subTotal: result[0].total,
+            subTotal: subTotal,
             taxValue: taxValue,
-            totalValue: result[0].total + taxValue,
+            totalValue: totalValue
           });
         })
         .catch((error) => {
-          renderError(res, error);
+          console.log(error);
         });
     });
 });
@@ -532,7 +542,6 @@ app.post("/deleteCart/:orderId", async (req, res) => {
               );
               return;
             }
-
             res.redirect("/cart")
           });
       }
