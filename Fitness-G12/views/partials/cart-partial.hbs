@@ -1,8 +1,7 @@
 <div class="cart">    
   <div class="item-desc-container">
-    <p class="bold-p">{{items.className}} with {{{items.instructor}}}</p>
+    <p class="bold-p">{{items.className}} <span>WITH</span> {{{items.instructor}}}</p>
     <p>{{{items.classLength}}}</p>
-    <p>${{{items.price}}}</p>
   </div>
   <div class="remove-btn-container">
     <form method="post" action="/deleteCart/{{this.orderID}}">

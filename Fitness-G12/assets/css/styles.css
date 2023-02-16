@@ -233,6 +233,11 @@ main {
   margin-left: 20px;
 }
 
+.class-details span {
+  font-size: 15px;
+  font-weight: bold;
+}
+
 .classes h2 {
   margin-top: 2px;
 }
@@ -252,6 +257,11 @@ main {
 .class-description {
   color: white;
   text-align: center;
+}
+
+.class-description p {
+  font-size: large;
+  font-weight: 900;
 }
 
 /* footer */
@@ -312,6 +322,15 @@ footer {
   overflow: auto;
   height: 100%;
   margin: auto;
+}
+
+.item-desc-container p {
+  font-size: 18px;
+}
+
+.item-desc-container span {
+  font-size: 12px;
+  font-weight: 800;
 }
 
 #payBtn {

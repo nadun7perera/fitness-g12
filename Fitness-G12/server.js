@@ -56,8 +56,7 @@ const classSchema = new mongoose.Schema({
   classID: Number,
   className: String,
   instructor: String,
-  classLength: String,
-  price: Number,
+  classLength: String
 });
 
 const purchaseSchema = new mongoose.Schema({
@@ -72,6 +71,7 @@ const cartSchema = new mongoose.Schema({
   userID: Number,
   userEmail: String,
   items: Object,
+  itemPrice: Number
 });
 
 // Compile the schema into a model
@@ -295,8 +295,6 @@ app.get("/classes", async (req, res) => {
 
 app.post("/classes/:classId", async (req, res) => {
   const cartID = Math.floor(Math.random() * 1000) + 1;
-  // const userID = Math.floor(Math.random() * 1000) + 1;
-  const listOfItems = [];
 
   //check if user is logged in
   if (isUserLoggedIn(req.session.isLoggedIn)) {
@@ -306,7 +304,10 @@ app.post("/classes/:classId", async (req, res) => {
       const currentUser = await User.findOne({
         userEmail: req.session.userEmail,
       });
-      listOfItems.push(currentClass);
+
+      //retrieve class duration and calculate price of class
+      const currentClassLength = parseInt(currentClass.classLength)
+      const classPrice = currentClassLength * 0.75
 
       const currentCart = new Cart({
         orderID: cartID,
@@ -314,6 +315,7 @@ app.post("/classes/:classId", async (req, res) => {
         userEmail: req.session.userEmail,
         // userName: currentUser.userName,
         items: currentClass,
+        itemPrice: classPrice
       });
 
       await currentCart.save();
@@ -412,7 +414,6 @@ app.post("/pay", async (req, res) => {
     userID: req.session.userId,
     userEmail: req.session.userEmail,
     payment: req.session.cartTotal,
-    // payment: 250
   });
 
   try {
