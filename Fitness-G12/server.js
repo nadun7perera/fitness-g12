@@ -375,8 +375,6 @@ app.get("/cart", async (req, res) => {
         { $group: { _id: null, total: { $sum: "$itemPrice" } } },
       ]);
 
-      console.log("total", totalValues);
-
       //getting values from aggregate method
       totalValues
         .exec()
@@ -464,7 +462,6 @@ app.get("/admin", async (req, res) => {
         totalValues
           .exec()
           .then((result) => {
-            console.log("total", result[0].totalValue);
             total = result[0].totalValue;
             res.render("admin", {
               layout: "skeleton",
@@ -522,8 +519,6 @@ app.get("/error", (req, res) => {
 
 //delete item from cart
 app.post("/deleteCart/:orderId", async (req, res) => {
-  console.log("order id ", req.params.orderId);
-
   Cart.deleteOne({ orderID: req.params.orderId })
     .exec()
     .then((result) => {
