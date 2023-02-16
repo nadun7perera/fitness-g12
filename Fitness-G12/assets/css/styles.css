@@ -7,7 +7,7 @@ body {
   margin: 0;
   width: 100vw;
   height: 100%;
-  background-image: url('../images/fitness-studio-home.jpg');
+  background-image: url("../images/fitness-studio-home.jpg");
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -60,7 +60,6 @@ img {
   height: 100vh;
 }
 
-
 .home-description {
   padding: 30px;
   position: absolute;
@@ -112,8 +111,7 @@ td {
   text-align: center;
 }
 
-#admin_div,
-#cart-container {
+#admin_div {
   width: 70%;
   height: 50%;
   overflow: auto;
@@ -161,7 +159,8 @@ td {
   display: grid;
 }
 
-#login-div > form > input,button {
+#login-div > form > input,
+button {
   height: 35px;
   margin-bottom: 10px;
   padding-left: 10px;
@@ -182,7 +181,6 @@ td {
   color: white;
 }
 
-
 /* classes */
 main {
   padding: 35px;
@@ -190,7 +188,7 @@ main {
 }
 
 .classes-container {
-  margin-bottom: 50px;
+  margin-bottom: 100px;
 }
 
 .classes {
@@ -261,12 +259,12 @@ footer {
 
 #error-container h1 {
   text-align: center;
-  color: red
+  color: red;
 }
 
 #error-container p {
   text-align: center;
-  color: white
+  color: white;
 }
 
 #error-button {
@@ -282,11 +280,73 @@ footer {
 
 /* cart */
 #cart-container {
-  width: 50%;
-  text-align: center;
+  width: 70%;
+  background-color: rgba(0, 0, 0, 0.555);
+  padding: 10px;
+  overflow: auto;
+  height: 100%;
+  margin: auto;
 }
 
 #cart-container form {
-  border: 1px solid red;
-  height:;
+  height: 100%;
+}
+
+.cart {
+  display: flex;
+  flex-direction: row;
+  color: white;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.bold-p {
+  font-weight: bold;
+}
+
+.cart-h2 {
+  font-weight: bolder;
+  color: #f3722c;
+}
+
+#cart-form-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#cart-form-div > input {
+  flex: 1;
+  flex-basis: 0;
+  font-size: medium;
+  height: 35px;
+}
+
+.cart-p {
+  color: white;
+}
+
+#star-div {
+  flex-direction: row;
+  display: flex;
+  align-items: center;
+}
+
+.remove-btn {
+  height: 30px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  background-color: white;
+  border-radius: 20px;
+  text-decoration: none;
+  width: 150px;
+  display: block;
+}
+
+.remove-btn:hover{
+  background-color: red;
+  color: white;
 }

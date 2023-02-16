@@ -1,14 +1,16 @@
 <main>
     <div id="cart-container">
     <form action="/cart" method="POST">
-        <p>CUSTOMER DETIALS</p>
-        <input type="text" name="userName" placeholder="Enter your name">
+        <h2 class="cart-h2">CUSTOMER DETIALS</h2>
+        <div id="cart-form-div">
+            <input type="text" name="userName" placeholder="Enter your name">
         <input type="text" name="userEmail" placeholder="Enter your email" value="{{this.userEmail}}">
+        </div>
         {{#if this.isMember}}
-        <p>VERIFIED MEMBER</p>
+        <div id="star-div"><img src="images/star.png" style="height:35px; width:35px"/><p class="cart-p">VERIFIED MEMBER</p></div>
         {{/if}}
 
-        <p>YOUR CLASSES</p>
+        <h2 class="cart-h2">YOUR CLASSES</h2>
         {{#each cartList}}
         {{> cart-partial this}}
         {{/each}}

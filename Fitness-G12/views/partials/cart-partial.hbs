@@ -1,7 +1,10 @@
 <div class="cart">
-    <div class="cart-details">
-        <p>{{{this.className}}} with {{{this.instructor}}}</p>
-        <p>{{{this.classLength}}}</p>
-        <a href="/classes/{{{this.classID}}}">REMOVE</a>
-    </div>
+  <div style="margin-left: 10px">
+    <p class="bold-p">{{{this.className}}} with {{{this.instructor}}}</p>
+    <p>{{{this.classLength}}}</p>
+  </div>
+  <div style="margin-right:10px">
+    <a class="remove-btn" href="/classes/{{{this.classID}}}">REMOVE</a>
+  </div>
 </div>
+  <div style="width:100%; height:0.5px; background-color:rgba(255, 255, 255, 0.635)"></div>
