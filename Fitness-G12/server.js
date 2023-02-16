@@ -286,16 +286,41 @@ app.get("/cart", async (req, res) => {
         isUserMemeber = currentUser.isMember
     }
 
-    const carts = await Cart.find({ userEmail: req.session.userEmail });
+    const carts = await Cart.find({ userEmail: req.session.userEmail }).lean().exec().then((result) => {
 
-    for (currentCart of carts) {
-        cartList.push(currentCart.items)
-    }
+        // sum all the values to show total
+        // const totalValues = Cart.aggregate([
+        //     {
+        //         $group: {
+        //             _id: null,
+        //             totalValue: { $sum: "$payment" },
+        //         },
+        //     },
+        // ]);
+
+        // //getting values from aggregate method
+        // totalValues
+        //     .exec()
+        //     .then((result) => {
+        //         console.log("total", result[0].totalValue);
+        //         total = result[0].totalValue;
+        //         res.render("admin", {
+        //             layout: "skeleton",
+        //             purchaseList: purchaseItem,
+        //             totalPurchase: result[0].totalValue, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn)
+        //         });
+        //     })
+        //     .catch((error) => {
+        //         renderError(res, error);
+        //     });
+
+        res.render("cart", { layout: "skeleton", userEmail: req.session.userEmail, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn), isMember: isUserMemeber, cartList: result });
+    });;
+
 
     console.log("userEmailFromUI: " + userEmailFromUI)
     // console.log(cartList)
-    console.log(cartList)
-    res.render("cart", { layout: "skeleton", userEmail: req.session.userEmail, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn), isMember: isUserMemeber, cartList: cartList });
+    
 });
 
 app.get("/login", (req, res) => {
