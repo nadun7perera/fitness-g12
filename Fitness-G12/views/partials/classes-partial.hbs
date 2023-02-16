@@ -1,10 +1,9 @@
 <div class="classes">
-    <img src="images/class-{{{this.classID}}}.jpg">
+    <img src="/images/class-{{{this.classID}}}.jpg">
     <div class="class-details">
         <h2>{{{this.className}}} <span>WITH</span> {{{this.instructor}}}</h2>
         <p>{{{this.classLength}}}</p>
         <form action="/classes/{{{this.classID}}}" method="POST">
-            {{!-- <a href="/classes/{{{this.classID}}}">Book Now</a> --}}
             <button type="submit">Book Now</button>
         </form>
     </div>

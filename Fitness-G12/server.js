@@ -72,7 +72,7 @@ const cartSchema = new mongoose.Schema({
     orderID: Number,
     userID: Number,
     userEmail: String,
-    userName: String,
+    // userName: String,
     items: Object
 });
 
@@ -86,14 +86,20 @@ const Cart = mongoose.model("Cart", cartSchema);
 let userEmailFromUI = null;
 let passwordFromUI = null;
 let userRole = null;
-var total = null;
+let total = null;
+// let cartTotal = null;
 
 app.get("/", (req, res) => {
     req.session.url = "/"
     res.render("home", { layout: "skeleton", isLoggedIn: isUserLoggedIn(req.session.isLoggedIn) });
 });
 
+app.get("/login", (req, res) => {
+    res.render("login", { layout: "skeleton", isLogin: true, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn) });
+});
+
 app.post("/login", async (req, res) => {
+    let user = null
     req.session.url = "/login"
     const loginBtn = req.body.loginBtn;
     const createAccBtn = req.body.createAccBtn;
@@ -108,23 +114,22 @@ app.post("/login", async (req, res) => {
 
         //login validation
         if (userEmailFromUI === '' && passwordFromUI === '') {
-            renderError(res, "Email and Password are required")
+            renderError(res, "Email and Password are required", true, isUserLoggedIn(req.session.isLoggedIn))
             return
         }
 
         if (userEmailFromUI === '') {
-            renderError(res, "Email is required")
+            renderError(res, "Email is required", true, isUserLoggedIn(req.session.isLoggedIn))
             return
         }
 
         if (passwordFromUI === '') {
-            renderError(res, "Password is required")
+            renderError(res, "Password is required", true, isUserLoggedIn(req.session.isLoggedIn))
             return
         }
 
         try {
-            console.log("Entered")
-            const user = await User.findOne({ userEmail: userEmailFromUI });
+            user = await User.findOne({ userEmail: userEmailFromUI });
             if (user !== null) {
                 if (user.password === passwordFromUI) {
                     authentication = true;
@@ -139,11 +144,8 @@ app.post("/login", async (req, res) => {
         if (authentication === true) {
             req.session.currentUser = userRole;
             req.session.userEmail = userEmailFromUI;
+            req.session.userId = user.userID;
             req.session.isLoggedIn = true;
-
-            console.log("[/login] What is the contents of req.session?");
-            console.log(req.session);
-            console.log(req.session.currentUser);
 
             //find all classes
             const classes = await Class.find({}).lean();
@@ -152,7 +154,7 @@ app.post("/login", async (req, res) => {
             // return userRole == appRoles.admin
             //     ? requestAdmin(): res.render("classes", { layout: "skeleton" });
         } else {
-            renderError(res, "Invalid credentials Entered")
+            renderError(res, "Invalid credentials Entered", true, isUserLoggedIn(req.session.isLoggedIn))
         }
         //Create Account btn
     } else if (createAccBtn === "CreateAccount") {
@@ -170,17 +172,17 @@ app.post("/signup", async (req, res) => {
 
     //login validation
     if (userEmailFromUI === '' && passwordFromUI === '') {
-        renderError(res, "Email and Password are required")
+        renderError(res, "Email and Password are required", true, isUserLoggedIn(req.session.isLoggedIn))
         return
     }
 
     if (userEmailFromUI === '') {
-        renderError(res, "Email is required")
+        renderError(res, "Email is required", true, isUserLoggedIn(req.session.isLoggedIn))
         return
     }
 
     if (passwordFromUI === '') {
-        renderError(res, "Password is required")
+        renderError(res, "Password is required", true, isUserLoggedIn(req.session.isLoggedIn))
         return
     }
 
@@ -215,10 +217,9 @@ app.post("/signup", async (req, res) => {
 
         req.session.currentUser = userRole;
         req.session.userEmail = userEmailFromUI;
+        req.session.userId = userID;
         req.session.isLoggedIn = true;
 
-        console.log(`User created: ${user}`);
-        console.log(`Purchase created: ${purchases}`);
         //find all classes
         const classes = await Class.find({}).lean();
 
@@ -233,8 +234,7 @@ app.get("/classes", async (req, res) => {
     try {
         //find all classes
         const classes = await Class.find({}).lean();
-        console.log("[/login] What is the contents of req.session?");
-        console.log(req.session.isLoggedIn);
+
         res.render("classes", { layout: "skeleton", classList: classes, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn) });
     } catch (error) {
         console.error(error);
@@ -246,7 +246,6 @@ app.post("/classes/:classId", async (req, res) => {
     // const userID = Math.floor(Math.random() * 1000) + 1;
     const listOfItems = []
 
-    console.log("user logegd in ", req.session.isLoggedIn);
     //check if user is logged in
     if (isUserLoggedIn(req.session.isLoggedIn)) {
         try {
@@ -272,8 +271,7 @@ app.post("/classes/:classId", async (req, res) => {
             console.error("error", error);
         }
     } else {
-        console.error("Entered else");
-        renderError(res, "You need to be logged in to book classes.")
+        renderError(res, "You need to be logged in to book classes.", true, isUserLoggedIn(req.session.isLoggedIn))
     }
 });
 
@@ -285,7 +283,14 @@ app.get("/cart", async (req, res) => {
         isUserMemeber = currentUser.isMember
     }
 
-    const carts = await Cart.find({ userEmail: req.session.userEmail }).lean().exec().then((result) => {
+    // const carts = await Cart.find({ userEmail: req.session.userEmail }).lean()
+    await Cart.find({ userEmail: req.session.userEmail }).lean().exec().then((result) => {
+
+        //display error message if no items in cart
+        if (result.length === 0) {
+            renderError(res, "Sorry, you do not have any items in the cart.", false, isUserLoggedIn(req.session.isLoggedIn))
+            return
+        }
 
         // sum all the values to show total
         // const totalValues = Cart.aggregate([
@@ -316,15 +321,38 @@ app.get("/cart", async (req, res) => {
         res.render("cart", { layout: "skeleton", userEmail: req.session.userEmail, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn), isMember: isUserMemeber, cartList: result });
     });;
 
-
-    console.log("userEmailFromUI: " + userEmailFromUI)
-    // console.log(cartList)
-    
+    // res.render("cart", { layout: "skeleton", userEmail: req.session.userEmail, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn), isMember: isUserMemeber, cartList: carts });
 });
 
-app.get("/login", (req, res) => {
-    res.render("login", { layout: "skeleton", isLogin: true });
-});
+app.post("/pay", async (req, res) => {
+    const purchaseID = Math.floor(Math.random() * 1000) + 1;
+    const orderID = (`ORD-${Math.floor(Math.random() * 10000) + 1}`);
+
+    if (isUserLoggedIn(req.session.isLoggedIn)) {
+        const currentUser = await User.findOne({ userEmail: req.session.userEmail });
+        isUserMemeber = currentUser.isMember
+    }
+
+    const purchases = new Purchase({
+        purchaseID: purchaseID,
+        userID: req.session.userId,
+        userEmail: req.session.userEmail,
+        payment: req.session.cartTotal
+        // payment: 250
+    });
+
+    try {
+        //save the cart total and user details to purchase collection
+        await purchases.save();
+
+        //remove all cart documents that matches the userEmail
+        await Cart.remove({ userEmail: req.session.userEmail });
+
+        res.render("confirmation", { layout: "skeleton", isLoggedIn: isUserLoggedIn(req.session.isLoggedIn), orderId: orderID });
+    } catch (error) {
+        console.error(error);
+    }
+})
 
 // const requestAdmin = () =>{
 app.get("/admin", async (req, res) => {
@@ -356,11 +384,11 @@ app.get("/admin", async (req, res) => {
                         });
                     })
                     .catch((error) => {
-                        renderError(res, error);
+                        renderError(res, error, true, isUserLoggedIn(req.session.isLoggedIn));
                     });
             });
     } else {
-        renderError(res, "Only Admin has access to this page!")
+        renderError(res, "Only Admin has access to this page!", true, isUserLoggedIn(req.session.isLoggedIn))
     }
 
 });
@@ -392,6 +420,11 @@ app.get("/error", (req, res) => {
     }
 })
 
+//function to create error message UI
+const renderError = (res, message, isGoBackBtn, isLoggedIn) => {
+    return res.render("error", { layout: "skeleton", message: message, isGoBackBtn: isGoBackBtn, isLoggedIn: isLoggedIn });
+};
+
 //function to check if the user is logged in
 const isUserLoggedIn = (isLogged) => {
     if (isLogged) {
@@ -400,11 +433,6 @@ const isUserLoggedIn = (isLogged) => {
         return false
     }
 }
-
-//function to create error message UI
-const renderError = (res, message) => {
-    return res.render("error", { layout: "skeleton", message: message });
-};
 
 const onHttpStart = () => {
     console.log(

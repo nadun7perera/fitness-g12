@@ -130,6 +130,10 @@ td {
   padding: 20px;
 }
 
+#admin_div h1 {
+  text-align: center;
+}
+
 #filter_div {
   flex-direction: row;
   display: flex;
@@ -159,7 +163,7 @@ td {
   display: grid;
 }
 
-#login-div > form > input,
+#login-div>form>input,
 button {
   height: 35px;
   margin-bottom: 10px;
@@ -191,6 +195,20 @@ main {
   margin-bottom: 100px;
 }
 
+.item-desc-container {
+  margin-left: 10px;
+}
+
+.remove-btn-container {
+  margin-right: 10px;
+}
+
+.cart-item-divider {
+  width: 100%;
+  height: 0.5px;
+  background-color: rgba(255, 255, 255, 0.635);
+}
+
 .classes {
   background-color: white;
   display: flex;
@@ -219,7 +237,8 @@ main {
   margin-top: 2px;
 }
 
-.classes button {
+.classes button,
+#payBtn {
   display: block;
   width: 30%;
   background-color: #f3722c;
@@ -247,27 +266,34 @@ footer {
 }
 
 /* error page */
-#error-container {
+#error-container,
+#confirmation-container {
   display: flex;
-  justify-content: center;
   flex-direction: column;
-  background-color: black;
-  height: 100%;
-  width: 100%;
-  /* margin-top: 10px; */
+  justify-content: center;
+  background-color: rgb(4, 4, 4);
+  border: 5px double rgb(244, 241, 241);
+  height: 50%;
+  width: 50%;
+  margin-top: 50px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-#error-container h1 {
+#error-container h1,
+#confirmation-container h1 {
   text-align: center;
   color: red;
 }
 
-#error-container p {
+#error-container p,
+#confirmation-container p {
   text-align: center;
   color: white;
 }
 
-#error-button {
+#error-button,
+#confirmation-button {
   width: 300px;
   margin-right: auto;
   margin-left: auto;
@@ -288,8 +314,36 @@ footer {
   margin: auto;
 }
 
+#payBtn {
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 50px;
+}
+
 #cart-container form {
-  height: 100%;
+  height: fit-content;
+}
+
+#payment-form {
+  height: 50%;
+  color: white;
+}
+
+#test {
+  text-align: right;
+}
+
+#payment-form p {
+  display: inline;
+}
+
+#payment-form label {
+  position: relative;
+  width: 10%;
+  margin-right: 10%;
+  margin-bottom: 100px;
+  display: inline-block;
 }
 
 .cart {
@@ -316,11 +370,12 @@ footer {
   justify-content: space-between;
 }
 
-#cart-form-div > input {
+#cart-form-div>input {
   flex: 1;
   flex-basis: 0;
   font-size: medium;
   height: 35px;
+  margin-right: 5px;
 }
 
 .cart-p {
@@ -331,6 +386,11 @@ footer {
   flex-direction: row;
   display: flex;
   align-items: center;
+}
+
+#star-div img {
+  height: 35px;
+  width: 35px
 }
 
 .remove-btn {
@@ -344,9 +404,10 @@ footer {
   text-decoration: none;
   width: 150px;
   display: block;
+  padding-top: 10px;
 }
 
-.remove-btn:hover{
+.remove-btn:hover {
   background-color: red;
   color: white;
 }
