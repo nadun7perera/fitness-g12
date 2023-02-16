@@ -1,6 +1,5 @@
     <main>
         <div id="cart-container">
-            <form action="/cart" method="POST" style="margin-bottom: 20px">
                 <h2 class="cart-h2">CUSTOMER DETIALS</h2>
                 <div id="cart-form-div">
                     <input type="text" name="userName" placeholder="Enter your name">
@@ -16,7 +15,6 @@
                 {{#each cartList}}
                 {{> cart-partial this}}
                 {{/each}}
-            </form>
             <form id="payment-form" action="/pay" method="POST">
                 <label>Subtotal: ${{this.subTotal}}</label>
                 <label>Tax:${{this.taxValue}}</label>

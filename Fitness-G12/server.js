@@ -352,6 +352,14 @@ app.get("/cart", async (req, res) => {
       userEmail: req.session.userEmail,
     });
     isUserMemeber = currentUser.isMember;
+  } else {
+    renderError(
+      res,
+      "You need to be logged in to view the cart.",
+      false,
+      isUserLoggedIn(req.session.isLoggedIn)
+    );
+    return;
   }
 
   await Cart.find({ userEmail: req.session.userEmail })
