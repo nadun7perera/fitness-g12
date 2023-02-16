@@ -8,7 +8,7 @@ body {
   width: 100vw;
   height: 100%;
   background-image: url('../images/fitness-studio-home.jpg');
-  background-repeat: no-repeat; 
+  background-repeat: no-repeat;
   background-size: cover;
 }
 
@@ -112,7 +112,8 @@ td {
   text-align: center;
 }
 
-#admin_div, #cart-container {
+#admin_div,
+#cart-container {
   width: 70%;
   height: 50%;
   overflow: auto;
@@ -167,7 +168,7 @@ td {
   background-color: rgba(255, 255, 255, 1);
 }
 
-#login-div button{
+#login-div button {
   background-color: #f3722c;
   color: white;
   padding-left: 0px;
@@ -220,7 +221,7 @@ main {
   margin-top: 2px;
 }
 
-.classes a {
+.classes button {
   display: block;
   width: 30%;
   background-color: #f3722c;
@@ -259,12 +260,12 @@ footer {
 }
 
 #error-container h1 {
-  text-align: center; 
+  text-align: center;
   color: red
 }
 
 #error-container p {
-  text-align: center; 
+  text-align: center;
   color: white
 }
 
@@ -277,4 +278,15 @@ footer {
   height: 30px;
   border-radius: 15px;
   margin-top: 20px;
+}
+
+/* cart */
+#cart-container {
+  width: 50%;
+  text-align: center;
+}
+
+#cart-container form {
+  border: 1px solid red;
+  height:;
 }
