@@ -17,13 +17,18 @@
             {{> cart-partial this}}
             {{/each}}
         </form>
-        <form action="/pay" method="POST">
-            <label>Subtotal: $</label>
-            <p>100</p>
-            <label>Tax: $</label>
-            <p>100</p>
-            <label>Total: $</label>
-            <p>100</p>
+        <form id="payment-form" action="/pay" method="POST">
+        <div id="test">
+            <label>Subtotal:</label>
+            <p>$100.89</p>
+            </br>
+            <label>Tax:</label>
+            <p>$100</p>
+            </br>
+            <label>Total:</label>
+            <p>$100</p>
+            </br>
+            </div>
             <button id="payBtn" type="submit">PAY</button>
         </form>
     </div>

@@ -318,10 +318,32 @@ footer {
   width: 50%;
   margin-left: auto;
   margin-right: auto;
+  margin-top: 50px;
 }
 
 #cart-container form {
-  height: 100%;
+  height: fit-content;
+}
+
+#payment-form {
+  height: 50%;
+  color: white;
+}
+
+#test {
+  text-align: right;
+}
+
+#payment-form p {
+  display: inline;
+}
+
+#payment-form label {
+  position: relative;
+  width: 10%;
+  margin-right: 10%;
+  margin-bottom: 100px;
+  display: inline-block;
 }
 
 .cart {
@@ -353,6 +375,7 @@ footer {
   flex-basis: 0;
   font-size: medium;
   height: 35px;
+  margin-right: 5px;
 }
 
 .cart-p {
@@ -381,6 +404,7 @@ footer {
   text-decoration: none;
   width: 150px;
   display: block;
+  padding-top: 10px;
 }
 
 .remove-btn:hover {

@@ -87,11 +87,15 @@ let userEmailFromUI = null;
 let passwordFromUI = null;
 let userRole = null;
 let total = null;
-let cartTotal = null;
+// let cartTotal = null;
 
 app.get("/", (req, res) => {
     req.session.url = "/"
     res.render("home", { layout: "skeleton", isLoggedIn: isUserLoggedIn(req.session.isLoggedIn) });
+});
+
+app.get("/login", (req, res) => {
+    res.render("login", { layout: "skeleton", isLogin: true, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn) });
 });
 
 app.post("/login", async (req, res) => {
@@ -125,7 +129,6 @@ app.post("/login", async (req, res) => {
         }
 
         try {
-            console.log("Entered")
             user = await User.findOne({ userEmail: userEmailFromUI });
             if (user !== null) {
                 if (user.password === passwordFromUI) {
@@ -143,10 +146,6 @@ app.post("/login", async (req, res) => {
             req.session.userEmail = userEmailFromUI;
             req.session.userId = user.userID;
             req.session.isLoggedIn = true;
-
-            console.log("[/login] What is the contents of req.session?");
-            console.log(req.session);
-            console.log(req.session.currentUser);
 
             //find all classes
             const classes = await Class.find({}).lean();
@@ -221,8 +220,6 @@ app.post("/signup", async (req, res) => {
         req.session.userId = userID;
         req.session.isLoggedIn = true;
 
-        console.log(`User created: ${user}`);
-        console.log(`Purchase created: ${purchases}`);
         //find all classes
         const classes = await Class.find({}).lean();
 
@@ -237,8 +234,7 @@ app.get("/classes", async (req, res) => {
     try {
         //find all classes
         const classes = await Class.find({}).lean();
-        console.log("[/login] What is the contents of req.session?");
-        console.log(req.session);
+
         res.render("classes", { layout: "skeleton", classList: classes, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn) });
     } catch (error) {
         console.error(error);
@@ -250,7 +246,6 @@ app.post("/classes/:classId", async (req, res) => {
     // const userID = Math.floor(Math.random() * 1000) + 1;
     const listOfItems = []
 
-    console.log("user logegd in ", req.session.isLoggedIn);
     //check if user is logged in
     if (isUserLoggedIn(req.session.isLoggedIn)) {
         try {
@@ -288,50 +283,48 @@ app.get("/cart", async (req, res) => {
         isUserMemeber = currentUser.isMember
     }
 
-    const carts = await Cart.find({ userEmail: req.session.userEmail }).lean()
+    // const carts = await Cart.find({ userEmail: req.session.userEmail }).lean()
+    await Cart.find({ userEmail: req.session.userEmail }).lean().exec().then((result) => {
 
-    //display error message if no items in cart
-    if (carts.length === 0) {
-        renderError(res, "Sorry, you do not have any items in the cart.", false, isUserLoggedIn(req.session.isLoggedIn))
-        return
-    }
+        //display error message if no items in cart
+        if (result.length === 0) {
+            renderError(res, "Sorry, you do not have any items in the cart.", false, isUserLoggedIn(req.session.isLoggedIn))
+            return
+        }
 
-    // const carts = await Cart.find({ userEmail: req.session.userEmail }).exec().lean().then((result) => {
+        // sum all the values to show total
+        // const totalValues = Cart.aggregate([
+        //     {
+        //         $group: {
+        //             _id: null,
+        //             totalValue: { $sum: "$payment" },
+        //         },
+        //     },
+        // ]);
 
-    // sum all the values to show total
-    // const totalValues = Cart.aggregate([
-    //     {
-    //         $group: {
-    //             _id: null,
-    //             totalValue: { $sum: "$payment" },
-    //         },
-    //     },
-    // ]);
+        // //getting values from aggregate method
+        // totalValues
+        //     .exec()
+        //     .then((result) => {
+        //         console.log("total", result[0].totalValue);
+        //         total = result[0].totalValue;
+        //         res.render("admin", {
+        //             layout: "skeleton",
+        //             purchaseList: purchaseItem,
+        //             totalPurchase: result[0].totalValue, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn)
+        //         });
+        //     })
+        //     .catch((error) => {
+        //         renderError(res, error);
+        //     });
 
-    // //getting values from aggregate method
-    // totalValues
-    //     .exec()
-    //     .then((result) => {
-    //         console.log("total", result[0].totalValue);
-    //         total = result[0].totalValue;
-    //         res.render("admin", {
-    //             layout: "skeleton",
-    //             purchaseList: purchaseItem,
-    //             totalPurchase: result[0].totalValue, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn)
-    //         });
-    //     })
-    //     .catch((error) => {
-    //         renderError(res, error);
-    //     });
+        res.render("cart", { layout: "skeleton", userEmail: req.session.userEmail, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn), isMember: isUserMemeber, cartList: result });
+    });;
 
-    //     res.render("cart", { layout: "skeleton", userEmail: req.session.userEmail, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn), isMember: isUserMemeber, cartList: result });
-    // });;
-
-    res.render("cart", { layout: "skeleton", userEmail: req.session.userEmail, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn), isMember: isUserMemeber, cartList: carts });
+    // res.render("cart", { layout: "skeleton", userEmail: req.session.userEmail, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn), isMember: isUserMemeber, cartList: carts });
 });
 
 app.post("/pay", async (req, res) => {
-    console.log("PAY button pressed")
     const purchaseID = Math.floor(Math.random() * 1000) + 1;
     const orderID = (`ORD-${Math.floor(Math.random() * 10000) + 1}`);
 
@@ -360,10 +353,6 @@ app.post("/pay", async (req, res) => {
         console.error(error);
     }
 })
-
-app.get("/login", (req, res) => {
-    res.render("login", { layout: "skeleton", isLogin: true, isLoggedIn: isUserLoggedIn(req.session.isLoggedIn) });
-});
 
 // const requestAdmin = () =>{
 app.get("/admin", async (req, res) => {
