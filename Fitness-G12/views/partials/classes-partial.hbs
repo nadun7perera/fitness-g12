@@ -3,6 +3,7 @@
     <div class="class-details">
         <h2>{{{this.className}}} <span>WITH</span> {{{this.instructor}}}</h2>
         <p>{{{this.classLength}}}</p>
+        <p>${{{this.price}}}</p>
         <form action="/classes/{{{this.classID}}}" method="POST">
             <button type="submit">Book Now</button>
         </form>

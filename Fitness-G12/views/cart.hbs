@@ -1,35 +1,27 @@
-<main>
-    <div id="cart-container">
-        <form action="/cart" method="POST">
-            <h2 class="cart-h2">CUSTOMER DETIALS</h2>
-            <div id="cart-form-div">
-                <input type="text" name="userName" placeholder="Enter your name">
-                <input type="text" name="userEmail" placeholder="Enter your email" value="{{this.userEmail}}">
-            </div>
-            {{#if this.isMember}}
-            <div id="star-div">
-                <img src="images/star.png" />
-                <p class="cart-p">VERIFIED MEMBER</p>
-            </div>
-            {{/if}}
-            <h2 class="cart-h2">YOUR CLASSES</h2>
-            {{#each cartList}}
-            {{> cart-partial this}}
-            {{/each}}
-        </form>
-        <form id="payment-form" action="/pay" method="POST">
-        <div id="test">
-            <label>Subtotal:</label>
-            <p>$100.89</p>
-            </br>
-            <label>Tax:</label>
-            <p>$100</p>
-            </br>
-            <label>Total:</label>
-            <p>$100</p>
-            </br>
-            </div>
-            <button id="payBtn" type="submit">PAY</button>
-        </form>
-    </div>
-</main>
+    <main>
+        <div id="cart-container">
+            <form action="/cart" method="POST" style="margin-bottom: 20px">
+                <h2 class="cart-h2">CUSTOMER DETIALS</h2>
+                <div id="cart-form-div">
+                    <input type="text" name="userName" placeholder="Enter your name">
+                    <input type="text" name="userEmail" placeholder="Enter your email" value="{{this.userEmail}}">
+                </div>
+                {{#if this.isMember}}
+                <div id="star-div">
+                    <img src="images/star.png" />
+                    <p class="cart-p">VERIFIED MEMBER</p>
+                </div>
+                {{/if}}
+                <h2 class="cart-h2">YOUR CLASSES</h2>
+                {{#each cartList}}
+                {{> cart-partial this}}
+                {{/each}}
+            </form>
+            <form id="payment-form" action="/pay" method="POST">
+                <label>Subtotal: ${{this.subTotal}}</label>
+                <label>Tax:$100</label>
+                <label>Total:$100</label>
+                <button id="payBtn" type="submit">PAY</button>
+            </form>
+        </div>
+    </main>

@@ -330,20 +330,14 @@ footer {
   color: white;
 }
 
-#test {
-  text-align: right;
-}
-
 #payment-form p {
   display: inline;
 }
 
 #payment-form label {
-  position: relative;
-  width: 10%;
-  margin-right: 10%;
-  margin-bottom: 100px;
-  display: inline-block;
+  display: grid;
+  justify-content: end;
+  margin-bottom: 10px;
 }
 
 .cart {
