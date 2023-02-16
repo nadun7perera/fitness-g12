@@ -280,7 +280,6 @@ app.post("/classes/:classId", async (req, res) => {
 app.get("/cart", async (req, res) => {
     let isUserMemeber = false
     // const userEmailFromUI = req.body.userEmail
-    let cartList = []
     if (isUserLoggedIn(req.session.isLoggedIn)) {
         const currentUser = await User.findOne({ userEmail: req.session.userEmail });
         isUserMemeber = currentUser.isMember
