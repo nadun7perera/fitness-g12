@@ -1,7 +1,6 @@
 const express = require("express");
 const app = express();
 app.use(express.static("assets"));
-
 const HTTP_PORT = process.env.PORT || 8080;
 
 const exphbs = require("express-handlebars");
@@ -320,14 +319,12 @@ app.post("/classes/:classId", async (req, res) => {
       await currentCart.save();
 
       //find all classes
-      //   const classes = await Class.find({}).lean();
-      //   res.render("classes", {
-      //     layout: "skeleton",
-      //     classList: classes,
-      //     isLoggedIn: isUserLoggedIn(req.session.isLoggedIn),
-      //   });
-
-      fetchCart(req, res);
+      const classes = await Class.find({}).lean();
+      res.render("classes", {
+        layout: "skeleton",
+        classList: classes,
+        isLoggedIn: isUserLoggedIn(req.session.isLoggedIn),
+      });
     } catch (error) {
       console.error("error", error);
     }
@@ -342,7 +339,61 @@ app.post("/classes/:classId", async (req, res) => {
 });
 
 app.get("/cart", async (req, res) => {
-  fetchCart(req, res);
+  let taxPercentage = 0.1; //i.e 10% (10/100 = 0.1)
+
+  let isUserMemeber = false;
+  if (isUserLoggedIn(req.session.isLoggedIn)) {
+    const currentUser = await User.findOne({
+      userEmail: req.session.userEmail,
+    });
+    isUserMemeber = currentUser.isMember;
+  }
+
+  // const carts = await Cart.find({ userEmail: req.session.userEmail }).lean()
+  await Cart.find({ userEmail: req.session.userEmail })
+    .lean()
+    .exec()
+    .then((cartItem) => {
+      //display error message if no items in cart
+      if (cartItem.length === 0) {
+        renderError(
+          res,
+          "Sorry, you do not have any items in the cart.",
+          false,
+          isUserLoggedIn(req.session.isLoggedIn)
+        );
+        return;
+      }
+
+      // sum all the values to show total
+      const totalValues = Cart.aggregate([
+        { $match: { userEmail: req.session.userEmail } },
+        { $group: { _id: null, total: { $sum: "$items.price" } } },
+      ]);
+
+      console.log("total", totalValues);
+
+      //getting values from aggregate method
+      totalValues
+        .exec()
+        .then((result) => {
+          console.log("total", result);
+          const taxValue = result[0].total * taxPercentage;
+          res.render("cart", {
+            layout: "skeleton",
+            userEmail: req.session.userEmail,
+            isLoggedIn: isUserLoggedIn(req.session.isLoggedIn),
+            isMember: isUserMemeber,
+            cartList: cartItem,
+            subTotal: result[0].total,
+            taxValue: taxValue,
+            totalValue: result[0].total + taxValue,
+          });
+        })
+        .catch((error) => {
+          renderError(res, error);
+        });
+    });
 });
 
 app.post("/pay", async (req, res) => {
@@ -481,70 +532,11 @@ app.post("/deleteCart/:orderId", async (req, res) => {
               return;
             }
 
-            fetchCart(req, res);
+            res.redirect("/cart")
           });
       }
     });
 });
-
-//const fetchcart
-const fetchCart = async (req, res) => {
-  let taxPercentage = 0.1; //i.e 10% (10/100 = 0.1)
-
-  let isUserMemeber = false;
-  if (isUserLoggedIn(req.session.isLoggedIn)) {
-    const currentUser = await User.findOne({
-      userEmail: req.session.userEmail,
-    });
-    isUserMemeber = currentUser.isMember;
-  }
-
-  // const carts = await Cart.find({ userEmail: req.session.userEmail }).lean()
-  await Cart.find({ userEmail: req.session.userEmail })
-    .lean()
-    .exec()
-    .then((cartItem) => {
-      //display error message if no items in cart
-      if (cartItem.length === 0) {
-        renderError(
-          res,
-          "Sorry, you do not have any items in the cart.",
-          false,
-          isUserLoggedIn(req.session.isLoggedIn)
-        );
-        return;
-      }
-
-      // sum all the values to show total
-      const totalValues = Cart.aggregate([
-        { $match: { userEmail: req.session.userEmail } },
-        { $group: { _id: null, total: { $sum: "$items.price" } } },
-      ]);
-
-      console.log("total", totalValues);
-
-      //getting values from aggregate method
-      totalValues
-        .exec()
-        .then((result) => {
-          console.log("total", result);
-          const taxValue = result[0].total * taxPercentage;
-          res.render("cart", {
-            layout: "skeleton",
-            userEmail: req.session.userEmail,
-            isLoggedIn: isUserLoggedIn(req.session.isLoggedIn),
-            isMember: isUserMemeber,
-            cartList: cartItem,
-            subTotal: result[0].total,
-            taxValue: taxValue,
-            totalValue: result[0].total + taxValue,
-          });
-        })
-        .catch((error) => {
-          renderError(res, error);
-        });
-    });
-};
 
 //function to create error message UI
 const renderError = (res, message, isGoBackBtn, isLoggedIn) => {
