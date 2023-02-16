@@ -1,11 +1,13 @@
-<div class="cart">
+<div class="cart">    
   <div class="item-desc-container">
     <p class="bold-p">{{items.className}} with {{{items.instructor}}}</p>
     <p>{{{items.classLength}}}</p>
     <p>${{{items.price}}}</p>
   </div>
   <div class="remove-btn-container">
-    <a class="remove-btn" href="/classes/{{{items.classID}}}">REMOVE</a>
+    <form method="post" action="/deleteCart/{{this.orderID}}">
+    <button class="remove-btn" type="submit">REMOVE</button>
+    </form>
   </div>
 </div>
   <div class="cart-item-divider"></div>

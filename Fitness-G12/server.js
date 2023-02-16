@@ -340,62 +340,7 @@ app.post("/classes/:classId", async (req, res) => {
 });
 
 app.get("/cart", async (req, res) => {
-
-    let taxPercentage = 0.1; //i.e 10% (10/100 = 0.1)
-
-  let isUserMemeber = false;
-  if (isUserLoggedIn(req.session.isLoggedIn)) {
-    const currentUser = await User.findOne({
-      userEmail: req.session.userEmail,
-    });
-    isUserMemeber = currentUser.isMember;
-  }
-
-  // const carts = await Cart.find({ userEmail: req.session.userEmail }).lean()
-  await Cart.find({ userEmail: req.session.userEmail })
-    .lean()
-    .exec()
-    .then((cartItem) => {
-      //display error message if no items in cart
-      if (cartItem.length === 0) {
-        renderError(
-          res,
-          "Sorry, you do not have any items in the cart.",
-          false,
-          isUserLoggedIn(req.session.isLoggedIn)
-        );
-        return;
-      }
-
-      // sum all the values to show total
-      const totalValues = Cart.aggregate([
-        { $match: { userEmail: req.session.userEmail } },
-        { $group: { _id: null, total: { $sum: "$items.price" } } },
-      ]);
-
-      console.log("total", totalValues);
-
-      //getting values from aggregate method
-      totalValues
-        .exec()
-        .then((result) => {
-          console.log("total", result);
-          const taxValue = result[0].total * taxPercentage
-          res.render("cart", {
-            layout: "skeleton",
-            userEmail: req.session.userEmail,
-            isLoggedIn: isUserLoggedIn(req.session.isLoggedIn),
-            isMember: isUserMemeber,
-            cartList: cartItem,
-            subTotal: result[0].total,
-            taxValue: taxValue,
-            totalValue: result[0].total+taxValue
-          });
-        })
-        .catch((error) => {
-          renderError(res, error);
-        });
-    });
+  fetchCart(req, res);
 });
 
 app.post("/pay", async (req, res) => {
@@ -510,6 +455,94 @@ app.get("/error", (req, res) => {
     res.redirect(req.session.url);
   }
 });
+
+//delete item from cart
+app.post("/deleteCart/:orderId", async (req, res) => {
+  console.log("order id ", req.params.orderId);
+
+  Cart.deleteOne({ orderID: req.params.orderId })
+    .exec()
+    .then((result) => {
+      if (result.acknowledged) {
+        Cart.find({ userEmail: req.session.userEmail })
+          .lean()
+          .exec()
+          .then((cartItem) => {
+            //display error message if no items in cart
+            if (cartItem.length === 0) {
+              renderError(
+                res,
+                "Sorry, you do not have any items in the cart.",
+                false,
+                isUserLoggedIn(req.session.isLoggedIn)
+              );
+              return;
+            }
+
+            fetchCart(req, res);
+          });
+      }
+    });
+});
+
+//const fetchcart
+const fetchCart = async (req, res) => {
+  let taxPercentage = 0.1; //i.e 10% (10/100 = 0.1)
+
+  let isUserMemeber = false;
+  if (isUserLoggedIn(req.session.isLoggedIn)) {
+    const currentUser = await User.findOne({
+      userEmail: req.session.userEmail,
+    });
+    isUserMemeber = currentUser.isMember;
+  }
+
+  // const carts = await Cart.find({ userEmail: req.session.userEmail }).lean()
+  await Cart.find({ userEmail: req.session.userEmail })
+    .lean()
+    .exec()
+    .then((cartItem) => {
+      //display error message if no items in cart
+      if (cartItem.length === 0) {
+        renderError(
+          res,
+          "Sorry, you do not have any items in the cart.",
+          false,
+          isUserLoggedIn(req.session.isLoggedIn)
+        );
+        return;
+      }
+
+      // sum all the values to show total
+      const totalValues = Cart.aggregate([
+        { $match: { userEmail: req.session.userEmail } },
+        { $group: { _id: null, total: { $sum: "$items.price" } } },
+      ]);
+
+      console.log("total", totalValues);
+
+      //getting values from aggregate method
+      totalValues
+        .exec()
+        .then((result) => {
+          console.log("total", result);
+          const taxValue = result[0].total * taxPercentage;
+          res.render("cart", {
+            layout: "skeleton",
+            userEmail: req.session.userEmail,
+            isLoggedIn: isUserLoggedIn(req.session.isLoggedIn),
+            isMember: isUserMemeber,
+            cartList: cartItem,
+            subTotal: result[0].total,
+            taxValue: taxValue,
+            totalValue: result[0].total + taxValue,
+          });
+        })
+        .catch((error) => {
+          renderError(res, error);
+        });
+    });
+};
 
 //function to create error message UI
 const renderError = (res, message, isGoBackBtn, isLoggedIn) => {
